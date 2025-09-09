@@ -1,6 +1,7 @@
 import { useState, useMemo } from "react";
 import { Badge } from "@/components/ui/badge";
-import { TrendingUp } from "lucide-react";
+import { TrendingUp, Filter, X } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import FilterSidebar from "./components/FilterSidebar";
 import { salaryData } from "./utils/dataArea";
 import {
@@ -31,6 +32,7 @@ export default function SalaryAnalyzer() {
 	const [experience, setExperience] = useState([3]);
 	const [hasInternational, setHasInternational] = useState(false);
 	const [selectedRegion, setSelectedRegion] = useState("Brasil");
+	const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
 
 	const experienceRange = useMemo(() => {
 		const years = experience[0];
@@ -82,7 +84,6 @@ export default function SalaryAnalyzer() {
 
 	return (
 		<div className="min-h-screen bg-background text-foreground">
-			{/* Header */}
 			<header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-50">
 				<div className="container mx-auto px-4 py-4">
 					<div className="flex items-center justify-between">
@@ -96,16 +97,26 @@ export default function SalaryAnalyzer() {
 								Salary Analyzer
 							</h1>
 						</div>
-						<Badge variant="secondary" className="hidden sm:flex">
-							<TrendingUp className="w-4 h-4 mr-1" />
-							Live Data
-						</Badge>
+						<div className="flex items-center gap-3">
+							<Button
+								variant="outline"
+								size="sm"
+								onClick={() => setIsMobileSidebarOpen(true)}
+								className="lg:hidden flex items-center gap-2"
+							>
+								<Filter className="w-4 h-4" />
+								Filtros
+							</Button>
+							<Badge variant="secondary" className="hidden sm:flex">
+								<TrendingUp className="w-4 h-4 mr-1" />
+								Live Data
+							</Badge>
+						</div>
 					</div>
 				</div>
 			</header>
 
 			<div className="flex">
-				{/* Fixed Sidebar */}
 				<div className="hidden lg:block w-96 bg-background fixed left-0 top-16 h-[calc(100vh-4rem)] overflow-y-auto z-40">
 					<div className="p-6 pt-8">
 						<FilterSidebar
@@ -119,7 +130,42 @@ export default function SalaryAnalyzer() {
 					</div>
 				</div>
 
-				{/* Main Content */}
+				{isMobileSidebarOpen && (
+					<div
+						className="fixed inset-0 bg-black/50 z-50 lg:hidden"
+						onClick={() => setIsMobileSidebarOpen(false)}
+					/>
+				)}
+
+				<div
+					className={`fixed top-0 left-0 h-full w-80 max-w-[85vw] bg-background border-r border-border z-50 transform transition-transform duration-300 ease-in-out lg:hidden ${
+						isMobileSidebarOpen ? "translate-x-0" : "-translate-x-full"
+					}`}
+				>
+					<div className="flex items-center justify-between p-4 border-b border-border">
+						<h2 className="text-lg font-semibold">Filtros</h2>
+						<Button
+							variant="ghost"
+							size="sm"
+							onClick={() => setIsMobileSidebarOpen(false)}
+							className="h-8 w-8 p-0"
+						>
+							<X className="h-4 w-4" />
+						</Button>
+					</div>
+					<div className="p-4 overflow-y-auto h-[calc(100vh-4rem)]">
+						<FilterSidebar
+							selectedArea={selectedArea}
+							setSelectedArea={setSelectedArea}
+							experience={experience}
+							setExperience={setExperience}
+							hasInternational={hasInternational}
+							setHasInternational={setHasInternational}
+							hideTitle={true}
+						/>
+					</div>
+				</div>
+
 				<div className="flex-1 lg:ml-96">
 					<div className="container mx-auto px-4 py-8">
 						<div className="space-y-6">
