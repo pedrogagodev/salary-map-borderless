@@ -32,6 +32,7 @@ interface FilterSidebarProps {
 	setExperience: (experience: number[]) => void;
 	hasInternational: boolean;
 	setHasInternational: (hasInternational: boolean) => void;
+	hideTitle?: boolean;
 }
 
 export default function FilterSidebar({
@@ -41,15 +42,18 @@ export default function FilterSidebar({
 	setExperience,
 	hasInternational,
 	setHasInternational,
+	hideTitle = false,
 }: FilterSidebarProps) {
 	const [selectedStack, setSelectedStack] = useState("");
 
 	return (
 		<div className="space-y-6 bg-card/50 border border-border rounded-lg p-4">
-			<div className="flex items-center gap-2 mb-6">
-				<Code className="w-5 h-5 text-primary" />
-				<h2 className="text-lg font-semibold">Filtros</h2>
-			</div>
+			{!hideTitle && (
+				<div className="flex items-center gap-2 mb-6">
+					<Code className="w-5 h-5 text-primary" />
+					<h2 className="text-lg font-semibold">Filtros</h2>
+				</div>
+			)}
 			<div className="space-y-6">
 				<div className="space-y-3">
 					<p className="text-sm font-medium">Área de Atuação</p>
@@ -76,7 +80,6 @@ export default function FilterSidebar({
 					</div>
 				</div>
 
-				{/* Experience Slider */}
 				<div className="space-y-3">
 					<p className="text-sm font-medium">
 						Experiência: {experience[0]} anos
@@ -95,7 +98,6 @@ export default function FilterSidebar({
 					</div>
 				</div>
 
-				{/* International Experience */}
 				<div className="flex items-center justify-between">
 					<p className="text-sm font-medium">Experiência Internacional</p>
 					<Switch
@@ -105,7 +107,6 @@ export default function FilterSidebar({
 					/>
 				</div>
 
-				{/* Stack Selection */}
 				<div className="space-y-3">
 					<p className="text-sm font-medium">Stack Principal</p>
 					<Select value={selectedStack} onValueChange={setSelectedStack}>
