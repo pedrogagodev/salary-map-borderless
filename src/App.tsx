@@ -28,6 +28,16 @@ const countryData = [
 	{ country: "Ásia", multiplier: 2.2, color: "#dc2626" },
 ];
 
+function getCountrySalaryForArea(area: string, countryName: string): number {
+	const areaData = salaryData[area as keyof typeof salaryData];
+	if (!areaData) return 0;
+
+	const baseSalary = { min: areaData.min, avg: areaData.avg, max: areaData.max };
+	const calculatedSalary = calculateCountrySalary(baseSalary, countryName);
+	
+	return calculatedSalary.avg;
+}
+
 export default function SalaryAnalyzer() {
 	const [selectedArea, setSelectedArea] = useState("Backend");
 	const [experience, setExperience] = useState([3]);
@@ -62,20 +72,47 @@ export default function SalaryAnalyzer() {
 	}, [selectedArea, experienceRange, hasInternational, selectedCountry]);
 
 	const chartData = useMemo(() => {
-		return Object.entries(salaryData).map(([area, data]) => ({
-			area,
-			salario_base: data.avg,
-			salario_internacional: Math.round(data.avg * data.intl_multiplier),
-		}));
-	}, []);
+		return Object.entries(salaryData).map(([area]) => {
+			const nationalSalary = getCountrySalaryForArea(area, selectedCountry);
+			const usaSalary = getCountrySalaryForArea(area, "United States");
+			
+			return {
+				area,
+				salario_base: nationalSalary,
+				salario_internacional: usaSalary,
+			};
+		});
+	}, [selectedCountry]);
 
 	const countryChartData = useMemo(() => {
-		const base = salaryData[selectedArea as keyof typeof salaryData];
-		return countryData.map((country) => ({
-			country: country.country,
-			salary: Math.round(base.avg * country.multiplier),
-		}));
-	}, [selectedArea]);
+		const baseCountries = countryData.map((country) => {
+			let countryForCalculation = country.country;
+			if (country.country === "Brasil") countryForCalculation = "Brazil";
+			if (country.country === "EUA") countryForCalculation = "United States";
+			
+			return {
+				country: country.country,
+				salary: getCountrySalaryForArea(selectedArea, countryForCalculation),
+			};
+		});
+
+		const selectedCountryName = selectedCountry;
+		const isSelectedCountryInList = baseCountries.some(item => 
+			item.country.toLowerCase() === selectedCountryName.toLowerCase() ||
+			(selectedCountryName === "Brazil" && item.country === "Brasil") ||
+			(selectedCountryName === "United States" && item.country === "EUA")
+		);
+
+		if (!isSelectedCountryInList && selectedCountryName !== "Brazil" && selectedCountryName !== "United States") {
+			const selectedCountrySalary = getCountrySalaryForArea(selectedArea, selectedCountryName);
+			baseCountries.push({
+				country: selectedCountryName,
+				salary: selectedCountrySalary,
+			});
+		}
+
+		return baseCountries;
+	}, [selectedArea, selectedCountry]);
 
 	return (
 		<div className="min-h-screen bg-background text-foreground">
@@ -181,7 +218,10 @@ export default function SalaryAnalyzer() {
 								selectedArea={selectedArea}
 							/>
 
-							<SalaryComparisonChart chartData={chartData} />
+							<SalaryComparisonChart 
+								chartData={chartData} 
+								selectedCountry={selectedCountry}
+							/>
 
 							<RegionalComparison
 								selectedArea={selectedArea}
