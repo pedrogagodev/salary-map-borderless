@@ -1,6 +1,5 @@
 import { useState, useMemo } from "react";
-import { Badge } from "@/components/ui/badge";
-import { TrendingUp, Filter, X } from "lucide-react";
+import { Filter, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import FilterSidebar from "./components/FilterSidebar";
 import { salaryData } from "./utils/dataArea";
@@ -32,9 +31,13 @@ function getCountrySalaryForArea(area: string, countryName: string): number {
 	const areaData = salaryData[area as keyof typeof salaryData];
 	if (!areaData) return 0;
 
-	const baseSalary = { min: areaData.min, avg: areaData.avg, max: areaData.max };
+	const baseSalary = {
+		min: areaData.min,
+		avg: areaData.avg,
+		max: areaData.max,
+	};
 	const calculatedSalary = calculateCountrySalary(baseSalary, countryName);
-	
+
 	return calculatedSalary.avg;
 }
 
@@ -75,7 +78,7 @@ export default function SalaryAnalyzer() {
 		return Object.entries(salaryData).map(([area]) => {
 			const nationalSalary = getCountrySalaryForArea(area, selectedCountry);
 			const usaSalary = getCountrySalaryForArea(area, "United States");
-			
+
 			return {
 				area,
 				salario_base: nationalSalary,
@@ -89,7 +92,7 @@ export default function SalaryAnalyzer() {
 			let countryForCalculation = country.country;
 			if (country.country === "Brasil") countryForCalculation = "Brazil";
 			if (country.country === "EUA") countryForCalculation = "United States";
-			
+
 			return {
 				country: country.country,
 				salary: getCountrySalaryForArea(selectedArea, countryForCalculation),
@@ -97,14 +100,22 @@ export default function SalaryAnalyzer() {
 		});
 
 		const selectedCountryName = selectedCountry;
-		const isSelectedCountryInList = baseCountries.some(item => 
-			item.country.toLowerCase() === selectedCountryName.toLowerCase() ||
-			(selectedCountryName === "Brazil" && item.country === "Brasil") ||
-			(selectedCountryName === "United States" && item.country === "EUA")
+		const isSelectedCountryInList = baseCountries.some(
+			(item) =>
+				item.country.toLowerCase() === selectedCountryName.toLowerCase() ||
+				(selectedCountryName === "Brazil" && item.country === "Brasil") ||
+				(selectedCountryName === "United States" && item.country === "EUA"),
 		);
 
-		if (!isSelectedCountryInList && selectedCountryName !== "Brazil" && selectedCountryName !== "United States") {
-			const selectedCountrySalary = getCountrySalaryForArea(selectedArea, selectedCountryName);
+		if (
+			!isSelectedCountryInList &&
+			selectedCountryName !== "Brazil" &&
+			selectedCountryName !== "United States"
+		) {
+			const selectedCountrySalary = getCountrySalaryForArea(
+				selectedArea,
+				selectedCountryName,
+			);
 			baseCountries.push({
 				country: selectedCountryName,
 				salary: selectedCountrySalary,
@@ -126,7 +137,7 @@ export default function SalaryAnalyzer() {
 								className="h-8 w-8"
 							/>
 							<h1 className="text-xl font-bold text-foreground">
-								Salary Analyzer
+								Borderless Coding Salary Comparison
 							</h1>
 						</div>
 						<div className="flex items-center gap-3">
@@ -139,18 +150,21 @@ export default function SalaryAnalyzer() {
 								<Filter className="w-4 h-4" />
 								Filtros
 							</Button>
-							<Badge variant="secondary" className="hidden sm:flex">
-								<TrendingUp className="w-4 h-4 mr-1" />
-								Live Data
-							</Badge>
 						</div>
 					</div>
 				</div>
 			</header>
 
 			<div className="flex">
-				<div className="hidden lg:block w-96 bg-background fixed left-0 top-16 h-[calc(100vh-4rem)] overflow-y-auto z-40">
-					<div className="p-6 pt-8">
+				{isMobileSidebarOpen && (
+					<div
+						className="fixed inset-0 bg-black/50 z-[999] lg:hidden"
+						onClick={() => setIsMobileSidebarOpen(false)}
+					/>
+				)}
+
+				<div className="hidden lg:block w-96 bg-background fixed left-0 top-16 h-[calc(100vh-4rem)] overflow-y-auto z-[1000]">
+					<div className="p-4 pt-6">
 						<FilterSidebar
 							selectedArea={selectedArea}
 							setSelectedArea={setSelectedArea}
@@ -162,15 +176,8 @@ export default function SalaryAnalyzer() {
 					</div>
 				</div>
 
-				{isMobileSidebarOpen && (
-					<Button
-						className="fixed inset-0 bg-black/50 z-50 lg:hidden"
-						onClick={() => setIsMobileSidebarOpen(false)}
-					/>
-				)}
-
 				<div
-					className={`fixed top-0 left-0 h-full w-80 max-w-[85vw] bg-background border-r border-border z-50 transform transition-transform duration-300 ease-in-out lg:hidden ${
+					className={`fixed top-0 left-0 h-full w-80 max-w-[85vw] bg-background border-r border-border z-[1001] transform transition-transform duration-300 ease-in-out lg:hidden ${
 						isMobileSidebarOpen ? "translate-x-0" : "-translate-x-full"
 					}`}
 				>
@@ -218,8 +225,8 @@ export default function SalaryAnalyzer() {
 								selectedArea={selectedArea}
 							/>
 
-							<SalaryComparisonChart 
-								chartData={chartData} 
+							<SalaryComparisonChart
+								chartData={chartData}
 								selectedCountry={selectedCountry}
 							/>
 
