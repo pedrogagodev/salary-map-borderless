@@ -8,7 +8,7 @@ import { YAxis } from "recharts";
 import { Tooltip } from "recharts";
 
 interface RegionData {
-	region: string;
+	country: string;
 	salary: number;
 }
 
@@ -38,7 +38,7 @@ export function RegionalComparison({
 								stroke="rgba(255,255,255,0.15)"
 							/>
 							<XAxis
-								dataKey="region"
+								dataKey="country"
 								stroke="#ffffff"
 								tick={{ fill: "#ffffff", fontSize: 13 }}
 								axisLine={{ stroke: "#ffffff" }}
