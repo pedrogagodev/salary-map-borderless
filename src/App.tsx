@@ -4,6 +4,7 @@ import { TrendingUp, Filter, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import FilterSidebar from "./components/FilterSidebar";
 import { salaryData } from "./utils/dataArea";
+import { calculateCountrySalary } from "./utils/countrySalaryData";
 import {
 	SalaryOverviewCards,
 	SalaryGlobalMap,
@@ -20,18 +21,18 @@ const experienceMultipliers = {
 	"12+": 2.0,
 };
 
-const regionData = [
-	{ region: "Brasil", multiplier: 1.0, color: "#28d3a0" },
-	{ region: "EUA", multiplier: 3.5, color: "#4814b0" },
-	{ region: "Europa", multiplier: 2.8, color: "#f59e0b" },
-	{ region: "Ásia", multiplier: 2.2, color: "#dc2626" },
+const countryData = [
+	{ country: "Brasil", multiplier: 1.0, color: "#28d3a0" },
+	{ country: "EUA", multiplier: 3.5, color: "#4814b0" },
+	{ country: "Europa", multiplier: 2.8, color: "#f59e0b" },
+	{ country: "Ásia", multiplier: 2.2, color: "#dc2626" },
 ];
 
 export default function SalaryAnalyzer() {
 	const [selectedArea, setSelectedArea] = useState("Backend");
 	const [experience, setExperience] = useState([3]);
 	const [hasInternational, setHasInternational] = useState(false);
-	const [selectedRegion, setSelectedRegion] = useState("Brasil");
+	const [selectedCountry, setSelectedCountry] = useState("Brazil");
 	const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
 
 	const experienceRange = useMemo(() => {
@@ -50,21 +51,15 @@ export default function SalaryAnalyzer() {
 				experienceRange as keyof typeof experienceMultipliers
 			];
 		const intlMultiplier = hasInternational ? base.intl_multiplier : 1;
-		const regionMultiplier =
-			regionData.find((r) => r.region === selectedRegion)?.multiplier || 1;
 
-		return {
-			min: Math.round(
-				base.min * expMultiplier * intlMultiplier * regionMultiplier,
-			),
-			avg: Math.round(
-				base.avg * expMultiplier * intlMultiplier * regionMultiplier,
-			),
-			max: Math.round(
-				base.max * expMultiplier * intlMultiplier * regionMultiplier,
-			),
+		const baseSalary = {
+			min: Math.round(base.min * expMultiplier * intlMultiplier),
+			avg: Math.round(base.avg * expMultiplier * intlMultiplier),
+			max: Math.round(base.max * expMultiplier * intlMultiplier),
 		};
-	}, [selectedArea, experienceRange, hasInternational, selectedRegion]);
+
+		return calculateCountrySalary(baseSalary, selectedCountry);
+	}, [selectedArea, experienceRange, hasInternational, selectedCountry]);
 
 	const chartData = useMemo(() => {
 		return Object.entries(salaryData).map(([area, data]) => ({
@@ -74,11 +69,11 @@ export default function SalaryAnalyzer() {
 		}));
 	}, []);
 
-	const regionChartData = useMemo(() => {
+	const countryChartData = useMemo(() => {
 		const base = salaryData[selectedArea as keyof typeof salaryData];
-		return regionData.map((region) => ({
-			...region,
-			salary: Math.round(base.avg * region.multiplier),
+		return countryData.map((country) => ({
+			country: country.country,
+			salary: Math.round(base.avg * country.multiplier),
 		}));
 	}, [selectedArea]);
 
@@ -131,7 +126,7 @@ export default function SalaryAnalyzer() {
 				</div>
 
 				{isMobileSidebarOpen && (
-					<div
+					<Button
 						className="fixed inset-0 bg-black/50 z-50 lg:hidden"
 						onClick={() => setIsMobileSidebarOpen(false)}
 					/>
@@ -169,25 +164,28 @@ export default function SalaryAnalyzer() {
 				<div className="flex-1 lg:ml-96">
 					<div className="container mx-auto px-4 py-8">
 						<div className="space-y-6">
-							<SalaryOverviewCards calculatedSalary={calculatedSalary} />
-
-							<SalaryGlobalMap
-								selectedRegion={selectedRegion}
-								setSelectedRegion={setSelectedRegion}
-								regionData={regionData}
+							<SalaryOverviewCards
+								calculatedSalary={calculatedSalary}
+								selectedCountry={selectedCountry}
 							/>
 
-							<SalaryComparisonChart chartData={chartData} />
-
-							<RegionalComparison
-								selectedArea={selectedArea}
-								regionChartData={regionChartData}
+							<SalaryGlobalMap
+								selectedCountry={selectedCountry}
+								setSelectedCountry={setSelectedCountry}
+								countryData={countryData}
 							/>
 
 							<InternationalImpact
 								hasInternational={hasInternational}
 								calculatedSalary={calculatedSalary}
 								selectedArea={selectedArea}
+							/>
+
+							<SalaryComparisonChart chartData={chartData} />
+
+							<RegionalComparison
+								selectedArea={selectedArea}
+								regionChartData={countryChartData}
 							/>
 						</div>
 					</div>
