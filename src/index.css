@@ -19,10 +19,7 @@
 	background-color: var(--accent);
 }
 
-.leaflet-top,
-.leaflet-bottom {
-	z-index: 400;
-}
+
 
 :root {
 	--background: oklch(0.11 0 0);

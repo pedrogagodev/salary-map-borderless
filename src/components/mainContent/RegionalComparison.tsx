@@ -17,6 +17,41 @@ interface RegionalComparisonProps {
 	regionChartData: RegionData[];
 }
 
+interface RegionalTooltipPayload {
+	dataKey: string;
+	name?: string;
+	value: number;
+	color: string;
+}
+
+interface CustomRegionalTooltipProps {
+	active?: boolean;
+	payload?: RegionalTooltipPayload[];
+	label?: string;
+}
+
+const CustomRegionalTooltip = ({ active, payload, label }: CustomRegionalTooltipProps) => {
+	if (active && payload && payload.length) {
+		return (
+			<div className="bg-card border border-border rounded-lg p-3 shadow-lg">
+				<p className="text-foreground font-medium mb-2">{label}</p>
+				{payload.map((entry) => (
+					<div key={entry.dataKey} className="flex items-center gap-2">
+						<div
+							className="w-3 h-3 rounded-full"
+							style={{ backgroundColor: entry.color }}
+						/>
+						<span className="text-sm text-foreground">
+							Salário: <span className="font-medium">R$ {entry.value?.toLocaleString()}</span>
+						</span>
+					</div>
+				))}
+			</div>
+		);
+	}
+	return null;
+};
+
 export function RegionalComparison({
 	selectedArea,
 	regionChartData,
@@ -50,15 +85,7 @@ export function RegionalComparison({
 								axisLine={{ stroke: "#ffffff" }}
 								tickLine={{ stroke: "#ffffff" }}
 							/>
-							<Tooltip
-								contentStyle={{
-									backgroundColor: "hsl(var(--card))",
-									border: "1px solid hsl(var(--border))",
-									borderRadius: "8px",
-								}}
-								labelStyle={{ color: "#ffffff" }}
-								itemStyle={{ color: "#ffffff" }}
-							/>
+							<Tooltip content={<CustomRegionalTooltip />} />
 							<Line
 								type="monotone"
 								dataKey="salary"

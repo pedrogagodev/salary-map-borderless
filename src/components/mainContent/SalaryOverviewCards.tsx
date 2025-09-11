@@ -3,23 +3,11 @@ import { Card, CardContent } from "../ui/card";
 
 export function SalaryOverviewCards({
 	calculatedSalary,
-	selectedCountry,
 }: {
 	calculatedSalary: { min: number; avg: number; max: number };
-	selectedCountry?: string;
 }) {
 	return (
 		<div className="space-y-4">
-			{selectedCountry && (
-				<div className="text-center">
-					<p className="text-sm text-muted-foreground">
-						Salários para{" "}
-						<span className="font-semibold text-foreground">
-							{selectedCountry}
-						</span>
-					</p>
-				</div>
-			)}
 			<div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
 				<Card className="border-primary/20">
 					<CardContent className="p-4 sm:p-6">

@@ -127,7 +127,7 @@ export default function SalaryAnalyzer() {
 
 	return (
 		<div className="min-h-screen bg-background text-foreground">
-			<header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-50">
+			<header className="border-b border-border bg-card/50 backdrop-blur-sm sticky z-[500] top-0">
 				<div className="container mx-auto px-4 py-4">
 					<div className="flex items-center justify-between">
 						<div className="flex items-center gap-3">
@@ -157,13 +157,13 @@ export default function SalaryAnalyzer() {
 
 			<div className="flex">
 				{isMobileSidebarOpen && (
-					<div
-						className="fixed inset-0 bg-black/50 z-[999] lg:hidden"
+					<Button
+						className="fixed inset-0 bg-black/50 lg:hidden"
 						onClick={() => setIsMobileSidebarOpen(false)}
-					/>
+					></Button>
 				)}
 
-				<div className="hidden lg:block w-96 bg-background fixed left-0 top-16 h-[calc(100vh-4rem)] overflow-y-auto z-[1000]">
+				<div className="hidden lg:block w-96 bg-background fixed left-0 top-16 h-[calc(100dvh-4rem)] overflow-y-auto">
 					<div className="p-4 pt-6">
 						<FilterSidebar
 							selectedArea={selectedArea}
@@ -177,7 +177,7 @@ export default function SalaryAnalyzer() {
 				</div>
 
 				<div
-					className={`fixed top-0 left-0 h-full w-80 max-w-[85vw] bg-background border-r border-border z-[1001] transform transition-transform duration-300 ease-in-out lg:hidden ${
+					className={`fixed top-0 left-0 h-[100dvh] w-80 max-w-[85vw] bg-background border-r border-border z-[1001] transform transition-transform duration-300 ease-in-out lg:hidden ${
 						isMobileSidebarOpen ? "translate-x-0" : "-translate-x-full"
 					}`}
 				>
@@ -192,7 +192,7 @@ export default function SalaryAnalyzer() {
 							<X className="h-4 w-4" />
 						</Button>
 					</div>
-					<div className="p-4 overflow-y-auto h-[calc(100vh-4rem)]">
+					<div className="p-4 overflow-y-auto h-[calc(100dvh-4rem)] pb-[env(safe-area-inset-bottom)]">
 						<FilterSidebar
 							selectedArea={selectedArea}
 							setSelectedArea={setSelectedArea}
@@ -210,7 +210,6 @@ export default function SalaryAnalyzer() {
 						<div className="space-y-6">
 							<SalaryOverviewCards
 								calculatedSalary={calculatedSalary}
-								selectedCountry={selectedCountry}
 							/>
 
 							<SalaryGlobalMap
@@ -228,6 +227,7 @@ export default function SalaryAnalyzer() {
 							<SalaryComparisonChart
 								chartData={chartData}
 								selectedCountry={selectedCountry}
+								hasInternational={hasInternational}
 							/>
 
 							<RegionalComparison
