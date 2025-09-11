@@ -101,6 +101,7 @@ export default function FilterSidebar({
 				<div className="flex items-center justify-between">
 					<p className="text-sm font-medium">Experiência Internacional</p>
 					<Switch
+						size="lg"
 						checked={hasInternational}
 						onCheckedChange={setHasInternational}
 						className="data-[state=checked]:bg-primary data-[state=unchecked]:bg-muted border border-primary/50 shadow-sm transition-colors"
