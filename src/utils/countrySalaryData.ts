@@ -462,7 +462,7 @@ export function getCountrySalaryData(countryName: string): CountrySalaryData {
 		}
 	}
 
-	return countrySalaryData.UnitedStates;
+	return countrySalaryData["United States"];
 }
 
 export function convertToBRL(
