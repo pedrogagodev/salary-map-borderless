@@ -19,17 +19,19 @@ interface SalaryComparisonDatum {
 
 interface SalaryComparisonChartProps {
 	chartData: SalaryComparisonDatum[];
+	selectedCountry?: string;
 }
 
 export function SalaryComparisonChart({
 	chartData,
+	selectedCountry = "País Selecionado",
 }: SalaryComparisonChartProps) {
 	return (
 		<Card>
 			<CardHeader>
 				<CardTitle className="flex items-center gap-2">
 					<BarChart className="w-5 h-5" />
-					Comparação Salarial por Área
+					Comparação Salarial por Área - {selectedCountry} vs EUA
 				</CardTitle>
 			</CardHeader>
 			<CardContent>
@@ -67,13 +69,13 @@ export function SalaryComparisonChart({
 								labelStyle={{ color: "#ffffff" }}
 								itemStyle={{ color: "#ffffff" }}
 							/>
-							<Bar dataKey="salario_base" fill="#60a5fa" name="Nacional" />
+							<Bar dataKey="salario_base" fill="#60a5fa" name={selectedCountry} />
 							<Bar
 								dataKey="salario_internacional"
 								fill="#f59e0b"
 								stroke="#ffffff"
 								strokeWidth={0.5}
-								name="Internacional"
+								name="EUA"
 							/>
 						</BarChart>
 					</ResponsiveContainer>

@@ -32,6 +32,7 @@ interface FilterSidebarProps {
 	setExperience: (experience: number[]) => void;
 	hasInternational: boolean;
 	setHasInternational: (hasInternational: boolean) => void;
+	hideTitle?: boolean;
 }
 
 export default function FilterSidebar({
@@ -41,19 +42,22 @@ export default function FilterSidebar({
 	setExperience,
 	hasInternational,
 	setHasInternational,
+	hideTitle = false,
 }: FilterSidebarProps) {
 	const [selectedStack, setSelectedStack] = useState("");
 
 	return (
-		<div className="space-y-6 bg-card/50 border border-border rounded-lg p-4">
-			<div className="flex items-center gap-2 mb-6">
-				<Code className="w-5 h-5 text-primary" />
-				<h2 className="text-lg font-semibold">Filtros</h2>
-			</div>
-			<div className="space-y-6">
-				<div className="space-y-3">
+		<div className="space-y-4 bg-card/50 border border-border rounded-lg p-3">
+			{!hideTitle && (
+				<div className="flex items-center gap-2 mb-4">
+					<Code className="w-5 h-5 text-primary" />
+					<h2 className="text-lg font-semibold">Filtros</h2>
+				</div>
+			)}
+			<div className="space-y-4">
+				<div className="space-y-2">
 					<p className="text-sm font-medium">Área de Atuação</p>
-					<div className="grid grid-cols-1 gap-2 mt-2">
+					<div className="grid grid-cols-1 gap-1.5 mt-2">
 						{Object.keys(salaryData).map((area) => {
 							const IconComponent = areaIcons[area as keyof typeof areaIcons];
 							const isSelected = selectedArea === area;
@@ -62,7 +66,7 @@ export default function FilterSidebar({
 									key={area}
 									type="button"
 									onClick={() => setSelectedArea(area)}
-									className={`flex items-center gap-3 p-3 rounded-lg border transition-all text-left ${
+									className={`flex items-center gap-2.5 p-2.5 rounded-lg border transition-all text-left ${
 										isSelected
 											? "border-primary bg-primary text-white font-medium"
 											: "border-border hover:border-primary/50 hover:bg-accent/50 text-foreground"
@@ -76,8 +80,7 @@ export default function FilterSidebar({
 					</div>
 				</div>
 
-				{/* Experience Slider */}
-				<div className="space-y-3">
+				<div className="space-y-2">
 					<p className="text-sm font-medium">
 						Experiência: {experience[0]} anos
 					</p>
@@ -95,7 +98,6 @@ export default function FilterSidebar({
 					</div>
 				</div>
 
-				{/* International Experience */}
 				<div className="flex items-center justify-between">
 					<p className="text-sm font-medium">Experiência Internacional</p>
 					<Switch
@@ -105,8 +107,7 @@ export default function FilterSidebar({
 					/>
 				</div>
 
-				{/* Stack Selection */}
-				<div className="space-y-3">
+				<div className="space-y-2">
 					<p className="text-sm font-medium">Stack Principal</p>
 					<Select value={selectedStack} onValueChange={setSelectedStack}>
 						<SelectTrigger className="bg-background border-primary/50 hover:border-primary focus:ring-2 focus:ring-primary/60 text-foreground">

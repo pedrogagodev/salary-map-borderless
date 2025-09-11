@@ -1,15 +1,15 @@
 import { MapPin } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
-import InteractiveMap from "../InteractiveMap";
+import { InteractiveMap } from "../InteractiveMap";
 
 export function SalaryGlobalMap({
-	selectedRegion,
-	setSelectedRegion,
-	regionData,
+	selectedCountry,
+	setSelectedCountry,
+	countryData,
 }: {
-	selectedRegion: string;
-	setSelectedRegion: (region: string) => void;
-	regionData: { region: string; multiplier: number; color: string }[];
+	selectedCountry: string;
+	setSelectedCountry: (country: string) => void;
+	countryData: { country: string; multiplier: number; color: string }[];
 }) {
 	return (
 		<Card>
@@ -21,9 +21,9 @@ export function SalaryGlobalMap({
 			</CardHeader>
 			<CardContent>
 				<InteractiveMap
-					selectedRegion={selectedRegion}
-					onRegionSelect={setSelectedRegion}
-					regionData={regionData}
+					selectedCountry={selectedCountry}
+					onCountrySelect={setSelectedCountry}
+					countryData={countryData}
 				/>
 			</CardContent>
 		</Card>
