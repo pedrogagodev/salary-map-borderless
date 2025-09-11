@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Filter, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import FilterSidebar from "./components/FilterSidebar";
@@ -47,6 +47,18 @@ export default function SalaryAnalyzer() {
 	const [hasInternational, setHasInternational] = useState(false);
 	const [selectedCountry, setSelectedCountry] = useState("Brazil");
 	const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
+
+	useEffect(() => {
+		if (isMobileSidebarOpen) {
+			document.body.style.overflow = "hidden";
+		} else {
+			document.body.style.overflow = "unset";
+		}
+
+		return () => {
+			document.body.style.overflow = "unset";
+		};
+	}, [isMobileSidebarOpen]);
 
 	const experienceRange = useMemo(() => {
 		const years = experience[0];
@@ -157,12 +169,20 @@ export default function SalaryAnalyzer() {
 
 			<div className="flex">
 				{isMobileSidebarOpen && (
-					<Button
-						className="fixed inset-0 bg-black/50 lg:hidden"
+					<button
+						type="button"
+						className="fixed inset-0 bg-black/50 z-[1000] lg:hidden border-0 p-0 cursor-pointer"
 						onClick={() => setIsMobileSidebarOpen(false)}
-					></Button>
+						onKeyDown={(e) => {
+							if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') {
+								setIsMobileSidebarOpen(false);
+							}
+						}}
+						aria-label="Fechar menu de filtros"
+					/>
 				)}
 
+				{/* Sidebar desktop */}
 				<div className="hidden lg:block w-96 bg-background fixed left-0 top-16 h-[calc(100dvh-4rem)] overflow-y-auto">
 					<div className="p-4 pt-6">
 						<FilterSidebar
