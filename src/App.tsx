@@ -127,7 +127,7 @@ export default function SalaryAnalyzer() {
 
 	return (
 		<div className="min-h-screen bg-background text-foreground">
-			<header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-50">
+			<header className="border-b border-border bg-card/50 backdrop-blur-sm sticky z-[500] top-0">
 				<div className="container mx-auto px-4 py-4">
 					<div className="flex items-center justify-between">
 						<div className="flex items-center gap-3">
@@ -157,13 +157,14 @@ export default function SalaryAnalyzer() {
 
 			<div className="flex">
 				{isMobileSidebarOpen && (
-					<div
-						className="fixed inset-0 bg-black/50 z-[999] lg:hidden"
+					<Button
+						className="fixed inset-0 bg-black/50 lg:hidden"
 						onClick={() => setIsMobileSidebarOpen(false)}
-					/>
+					>
+					</Button>
 				)}
 
-				<div className="hidden lg:block w-96 bg-background fixed left-0 top-16 h-[calc(100vh-4rem)] overflow-y-auto z-[1000]">
+				<div className="hidden lg:block w-96 bg-background fixed left-0 top-16 h-[calc(100vh-4rem)] overflow-y-auto">
 					<div className="p-4 pt-6">
 						<FilterSidebar
 							selectedArea={selectedArea}
