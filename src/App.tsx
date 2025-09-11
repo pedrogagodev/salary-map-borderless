@@ -210,7 +210,6 @@ export default function SalaryAnalyzer() {
 						<div className="space-y-6">
 							<SalaryOverviewCards
 								calculatedSalary={calculatedSalary}
-								selectedCountry={selectedCountry}
 							/>
 
 							<SalaryGlobalMap
@@ -228,6 +227,7 @@ export default function SalaryAnalyzer() {
 							<SalaryComparisonChart
 								chartData={chartData}
 								selectedCountry={selectedCountry}
+								hasInternational={hasInternational}
 							/>
 
 							<RegionalComparison
