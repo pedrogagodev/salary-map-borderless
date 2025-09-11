@@ -1,49 +1,134 @@
-import { Globe } from "lucide-react";
-import { Button } from "./ui/button";
+import { useEffect, useState } from "react";
+import { MapContainer, TileLayer, GeoJSON } from "react-leaflet";
+import type { GeoJSONData, GeoJSONFeature } from "@/types/mapTypes";
+import type { Layer, PathOptions } from "leaflet";
+import "leaflet/dist/leaflet.css";
+import "../styles/map.css";
 
-export default function InteractiveMap({
-	selectedRegion,
-	onRegionSelect,
-	regionData,
-}: {
-	selectedRegion: string;
-	onRegionSelect: (region: string) => void;
-	regionData: Array<{ region: string; multiplier: number; color: string }>;
-}) {
+interface InteractiveMapProps {
+	selectedCountry?: string;
+	onCountrySelect?: (country: string) => void;
+	countryData?: { country: string; multiplier: number; color: string }[];
+}
+
+export function InteractiveMap({
+	selectedCountry,
+	onCountrySelect,
+}: InteractiveMapProps) {
+	const [geoData, setGeoData] = useState<GeoJSONData | null>(null);
+	const [loading, setLoading] = useState(true);
+
+	useEffect(() => {
+		const loadGeoData = async () => {
+			try {
+				const response = await import("../data/GeoJSON-MAP.geojson?url");
+				const geoJsonResponse = await fetch(response.default);
+				const data: GeoJSONData = await geoJsonResponse.json();
+				setGeoData(data);
+			} catch (error) {
+				console.error("Error loading map data:", error);
+			} finally {
+				setLoading(false);
+			}
+		};
+
+		loadGeoData();
+	}, []);
+
+	const handleCountryClick = (feature: GeoJSONFeature) => {
+		const countryName = feature.properties?.NAME || feature.properties?.name;
+
+		if (!countryName) return;
+
+		if (onCountrySelect) {
+			onCountrySelect(countryName);
+		}
+	};
+
+	const onEachFeature = (feature: GeoJSONFeature, layer: Layer) => {
+		const countryName = feature.properties?.NAME || feature.properties?.name;
+		if (countryName) {
+			layer.bindTooltip(countryName, {
+				className: "country-tooltip",
+			});
+		}
+
+		layer.on({
+			click: () => handleCountryClick(feature),
+			mouseover: (e) => {
+				const target = e.target as Layer & {
+					setStyle: (style: PathOptions) => void;
+				};
+				const countryName =
+					feature.properties?.NAME || feature.properties?.name;
+				const isSelected = selectedCountry === countryName;
+
+				target.setStyle({
+					weight: 2,
+					color: isSelected ? "#7c3aed" : "#374151",
+					fillOpacity: 0.8,
+					fillColor: isSelected ? "#8b5cf6" : "#94a3b8",
+				});
+			},
+			mouseout: (e) => {
+				const target = e.target as Layer & {
+					setStyle: (style: PathOptions) => void;
+				};
+				target.setStyle(getCountryStyle(feature));
+			},
+		});
+	};
+
+	const getCountryStyle = (feature?: GeoJSONFeature): PathOptions => {
+		if (!feature) {
+			return {
+				weight: 1,
+				opacity: 1,
+				color: "#666",
+				fillOpacity: 0.6,
+				fillColor: "#e2e8f0",
+			};
+		}
+
+		const countryName = feature.properties?.NAME || feature.properties?.name;
+		const isSelected = selectedCountry === countryName;
+
+		return {
+			weight: isSelected ? 3 : 1,
+			opacity: 1,
+			color: isSelected ? "#7c3aed" : "#475569",
+			fillOpacity: isSelected ? 0.9 : 0.6,
+			fillColor: isSelected ? "#8b5cf6" : "#e2e8f0",
+		};
+	};
+
+	if (loading) {
+		return (
+			<div className="map-wrapper">
+				<div className="flex items-center justify-center h-full">
+					<p>Carregando mapa...</p>
+				</div>
+			</div>
+		);
+	}
+
 	return (
-		<div className="relative bg-card/50 rounded-lg p-6 min-h-[300px] border border-border">
-			<div className="absolute inset-0 flex items-center justify-center">
-				<div className="text-center space-y-4">
-					<Globe className="w-16 h-16 text-muted-foreground mx-auto" />
-					<div>
-						<p className="text-lg font-medium text-foreground">
-							Mapa Interativo
-						</p>
-						<p className="text-sm text-muted-foreground">
-							Componente será implementado aqui
-						</p>
-					</div>
-				</div>
-			</div>
+		<div className="map-wrapper-simple">
+			<MapContainer center={[20, 0]} zoom={2} className="leaflet-map-simple">
+				<TileLayer
+					url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+					attribution="© OpenStreetMap contributors"
+				/>
 
-			{/* Temporary region selector for now */}
-			<div className="absolute bottom-4 left-4 right-4">
-				<div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-					{regionData.map((region) => (
-						<Button
-							key={region.region}
-							onClick={() => onRegionSelect(region.region)}
-							className={`p-2 rounded-md text-xs font-medium transition-colors ${
-								selectedRegion === region.region
-									? "bg-primary text-white"
-									: "bg-card hover:bg-accent text-foreground hover:text-accent-foreground border border-border"
-							}`}
-						>
-							{region.region}
-						</Button>
-					))}
-				</div>
-			</div>
+				{geoData && (
+					<GeoJSON
+						key={`geojson-${selectedCountry || "none"}`}
+						data={geoData}
+						style={getCountryStyle}
+						onEachFeature={onEachFeature}
+					/>
+				)}
+			</MapContainer>
 		</div>
 	);
 }
