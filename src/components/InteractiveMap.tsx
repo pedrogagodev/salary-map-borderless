@@ -58,26 +58,20 @@ export function InteractiveMap({
 				];
 
 				const loadPromises = regions.map(async (region) => {
-					const url = await import(`../data/continents/${region.file}?url`);
-					
-					const response = await fetch(url.default);
+					const assetUrl = new URL(`../data/continents/${region.file}`, import.meta.url).href;
+					const response = await fetch(assetUrl);
 					const data = await response.json();
-
-					
 					return {
 						...region,
-						data: data as GeoJSONData
+						data: data as GeoJSONData,
 					};
 				});
 
 				const loadedRegions = await Promise.all(loadPromises);
 
 				const allFeatures: GeoJSONFeature[] = [];
-				
 				loadedRegions.forEach(region => {
-					
 					let features: GeoJSONFeature[] = [];
-					
 					if (region.data?.features) {
 						features = region.data.features;
 					} else if (Array.isArray(region.data)) {
@@ -88,14 +82,13 @@ export function InteractiveMap({
 						console.error(`Data structure not recognized for region: ${region.key}`, region.data);
 						return;
 					}
-					
-					
+
 					const mappedFeatures = features.map((f) => ({
 						...f,
-						properties: { 
-							...(f.properties || {}), 
-							__group: region.key, 
-							__label: region.label 
+						properties: {
+							...(f.properties || {}),
+							__group: region.key,
+							__label: region.label,
 						} as PropertiesRecord,
 					}));
 					allFeatures.push(...mappedFeatures);
