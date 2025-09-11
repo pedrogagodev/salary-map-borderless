@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { MapContainer, TileLayer, GeoJSON } from "react-leaflet";
 import type { GeoJSONData, GeoJSONFeature } from "@/types/mapTypes";
 import type { Layer, PathOptions } from "leaflet";
@@ -11,20 +11,97 @@ interface InteractiveMapProps {
 	countryData?: { country: string; multiplier: number; color: string }[];
 }
 
+type GroupKey = "United States" | "Brazil" | "Europe" | "Asia";
+
+type PropertiesRecord = Record<string, unknown>;
+
+const getNameFromFeature = (f: GeoJSONFeature): string => {
+	const props = (f.properties || {}) as PropertiesRecord;
+	return (
+		(String(props.NAME) || "") ||
+		(String(props.name) || "") ||
+		(String(props.ADMIN) || "")
+	);
+};
+
+const getCustomProp = <T,>(f: GeoJSONFeature, key: string): T | undefined => {
+	const props = (f.properties || {}) as PropertiesRecord;
+	return props[key] as T | undefined;
+};
+
+const isGeoJSONFeature = (data: unknown): data is GeoJSONFeature => {
+	return (
+		typeof data === 'object' &&
+		data !== null &&
+		'type' in data &&
+		(data as { type: unknown }).type === 'Feature' &&
+		'geometry' in data &&
+		'properties' in data
+	);
+};
+
 export function InteractiveMap({
 	selectedCountry,
 	onCountrySelect,
 }: InteractiveMapProps) {
-	const [geoData, setGeoData] = useState<GeoJSONData | null>(null);
+	const [interactiveData, setInteractiveData] = useState<GeoJSONData | null>(null);
 	const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
 		const loadGeoData = async () => {
 			try {
-				const response = await import("../data/GeoJSON-MAP.geojson?url");
-				const geoJsonResponse = await fetch(response.default);
-				const data: GeoJSONData = await geoJsonResponse.json();
-				setGeoData(data);
+				const regions = [
+					{ key: 'Brazil' as GroupKey, file: 'Brazil.geojson', label: 'Brasil' },
+					{ key: 'United States' as GroupKey, file: 'USA.geojson', label: 'Estados Unidos' },
+					{ key: 'Europe' as GroupKey, file: 'EU-simplified.geojson', label: 'Europa' },
+					{ key: 'Asia' as GroupKey, file: 'AS-simplified.geojson', label: 'Ásia' }
+				];
+
+				const loadPromises = regions.map(async (region) => {
+					const url = await import(`../data/continents/${region.file}?url`);
+					
+					const response = await fetch(url.default);
+					const data = await response.json();
+
+					
+					return {
+						...region,
+						data: data as GeoJSONData
+					};
+				});
+
+				const loadedRegions = await Promise.all(loadPromises);
+
+				const allFeatures: GeoJSONFeature[] = [];
+				
+				loadedRegions.forEach(region => {
+					
+					let features: GeoJSONFeature[] = [];
+					
+					if (region.data?.features) {
+						features = region.data.features;
+					} else if (Array.isArray(region.data)) {
+						features = region.data as GeoJSONFeature[];
+					} else if (isGeoJSONFeature(region.data)) {
+						features = [region.data];
+					} else {
+						console.error(`Data structure not recognized for region: ${region.key}`, region.data);
+						return;
+					}
+					
+					
+					const mappedFeatures = features.map((f) => ({
+						...f,
+						properties: { 
+							...(f.properties || {}), 
+							__group: region.key, 
+							__label: region.label 
+						} as PropertiesRecord,
+					}));
+					allFeatures.push(...mappedFeatures);
+				});
+
+				setInteractiveData({ type: "FeatureCollection", features: allFeatures as unknown as GeoJSONFeature[] });
 			} catch (error) {
 				console.error("Error loading map data:", error);
 			} finally {
@@ -35,70 +112,72 @@ export function InteractiveMap({
 		loadGeoData();
 	}, []);
 
-	const handleCountryClick = (feature: GeoJSONFeature) => {
-		const countryName = feature.properties?.NAME || feature.properties?.name;
+	const selectedGroup = useMemo(() => selectedCountry as GroupKey | undefined, [selectedCountry]);
 
-		if (!countryName) return;
-
+	const handleFeatureClick = (feature: GeoJSONFeature) => {
+		const group = getCustomProp<GroupKey>(feature, "__group");
+		if (!group) return;
 		if (onCountrySelect) {
-			onCountrySelect(countryName);
+			onCountrySelect(group);
 		}
 	};
 
-	const onEachFeature = (feature: GeoJSONFeature, layer: Layer) => {
-		const countryName = feature.properties?.NAME || feature.properties?.name;
-		if (countryName) {
-			layer.bindTooltip(countryName, {
-				className: "country-tooltip",
-			});
-		}
+	const onEachInteractiveFeature = (feature: GeoJSONFeature, layer: Layer) => {
+		const group = getCustomProp<GroupKey>(feature, "__group");
+		const labelByGroup: Record<GroupKey, string> = {
+			"United States": "Estados Unidos",
+			Brazil: "Brasil",
+			Europe: "Europa",
+			Asia: "Ásia",
+		};
+		
+		const label = group ? labelByGroup[group] : getNameFromFeature(feature);
+		
+		const tooltipOptions = {
+			className: "country-tooltip",
+			sticky: true,
+			direction: 'center' as const,
+			offset: [0, -10] as [number, number]
+		};
+			
+		layer.bindTooltip(String(label), tooltipOptions);
 
 		layer.on({
-			click: () => handleCountryClick(feature),
+			click: () => handleFeatureClick(feature),
 			mouseover: (e) => {
-				const target = e.target as Layer & {
-					setStyle: (style: PathOptions) => void;
-				};
-				const countryName =
-					feature.properties?.NAME || feature.properties?.name;
-				const isSelected = selectedCountry === countryName;
-
+				const target = e.target as Layer & { setStyle: (style: PathOptions) => void };
+				const isSelected = Boolean(selectedGroup && getCustomProp<GroupKey>(feature, "__group") === selectedGroup);
 				target.setStyle({
 					weight: 2,
-					color: isSelected ? "#7c3aed" : "#374151",
-					fillOpacity: 0.8,
-					fillColor: isSelected ? "#8b5cf6" : "#94a3b8",
+					color: isSelected ? "#16a34a" : "#374151",
+					fillOpacity: 0.85,
+					fillColor: isSelected ? "#22c55e" : "#a7f3d0",
 				});
 			},
 			mouseout: (e) => {
-				const target = e.target as Layer & {
-					setStyle: (style: PathOptions) => void;
-				};
-				target.setStyle(getCountryStyle(feature));
+				const target = e.target as Layer & { setStyle: (style: PathOptions) => void };
+				target.setStyle(getInteractiveStyle(feature));
 			},
 		});
 	};
 
-	const getCountryStyle = (feature?: GeoJSONFeature): PathOptions => {
+	const getInteractiveStyle = (feature?: GeoJSONFeature): PathOptions => {
 		if (!feature) {
 			return {
 				weight: 1,
 				opacity: 1,
-				color: "#666",
-				fillOpacity: 0.6,
-				fillColor: "#e2e8f0",
+				color: "#166534",
+				fillOpacity: 0.7,
+				fillColor: "#86efac",
 			};
 		}
-
-		const countryName = feature.properties?.NAME || feature.properties?.name;
-		const isSelected = selectedCountry === countryName;
-
+		const isSelected = Boolean(selectedGroup && getCustomProp<GroupKey>(feature, "__group") === selectedGroup);
 		return {
 			weight: isSelected ? 3 : 1,
 			opacity: 1,
-			color: isSelected ? "#7c3aed" : "#475569",
-			fillOpacity: isSelected ? 0.9 : 0.6,
-			fillColor: isSelected ? "#8b5cf6" : "#e2e8f0",
+			color: isSelected ? "#15803d" : "#166534",
+			fillOpacity: isSelected ? 0.9 : 0.7,
+			fillColor: isSelected ? "#22c55e" : "#86efac",
 		};
 	};
 
@@ -120,12 +199,12 @@ export function InteractiveMap({
 					attribution="© OpenStreetMap contributors"
 				/>
 
-				{geoData && (
+				{interactiveData && (
 					<GeoJSON
-						key={`geojson-${selectedCountry || "none"}`}
-						data={geoData}
-						style={getCountryStyle}
-						onEachFeature={onEachFeature}
+						key={`interactive-${selectedGroup || "none"}`}
+						data={interactiveData}
+						style={getInteractiveStyle}
+						onEachFeature={onEachInteractiveFeature}
 					/>
 				)}
 			</MapContainer>
