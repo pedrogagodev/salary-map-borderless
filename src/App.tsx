@@ -1,9 +1,11 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useCallback } from "react";
 import { Filter, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import FilterSidebar from "./components/FilterSidebar";
-import { salaryData } from "./utils/dataArea";
-import { calculateCountrySalary } from "./utils/countrySalaryData";
+import { getSalaryData } from "./services/salaryDataService";
+import { getSalary, getSalaryByContinent, getRolesByCategory, mapCountryNameToCode } from "./utils/salaryDataUtils";
+import type { Category, RoleName, ExperienceLevel, CountryCode, Continent } from "./types/salaryTypes";
+
 import {
 	SalaryOverviewCards,
 	SalaryGlobalMap,
@@ -12,41 +14,42 @@ import {
 	InternationalImpact,
 } from "./components/mainContent";
 
-const experienceMultipliers = {
-	"0-2": 0.7,
-	"2-5": 1.0,
-	"5-7": 1.3,
-	"7-12": 1.6,
-	"12+": 2.0,
-};
 
 const countryData = [
-	{ country: "Brasil", multiplier: 1.0, color: "#28d3a0" },
 	{ country: "EUA", multiplier: 3.5, color: "#4814b0" },
 	{ country: "Europa", multiplier: 2.8, color: "#f59e0b" },
 	{ country: "Ásia", multiplier: 2.2, color: "#dc2626" },
 ];
 
-function getCountrySalaryForArea(area: string, countryName: string): number {
-	const areaData = salaryData[area as keyof typeof salaryData];
-	if (!areaData) return 0;
-
-	const baseSalary = {
-		min: areaData.min,
-		avg: areaData.avg,
-		max: areaData.max,
-	};
-	const calculatedSalary = calculateCountrySalary(baseSalary, countryName);
-
-	return calculatedSalary.avg;
-}
 
 export default function SalaryAnalyzer() {
-	const [selectedArea, setSelectedArea] = useState("Backend");
+	const [selectedCategory, setSelectedCategory] = useState<Category>("Backend");
+	const [selectedRole, setSelectedRole] = useState<RoleName | null>(null);
 	const [experience, setExperience] = useState([3]);
 	const [hasInternational, setHasInternational] = useState(false);
-	const [selectedCountry, setSelectedCountry] = useState("Brazil");
+	const [selectedCountry, setSelectedCountry] = useState("United States");
 	const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
+	const [comparisonType, setComparisonType] = useState<'stacks' | 'areas'>('stacks');
+	
+	const newSalaryData = getSalaryData();
+	
+	const getExperienceLevel = useCallback((years: number): ExperienceLevel => {
+		if (years <= 2) return "Junior";
+		if (years <= 5) return "Mid";
+		if (years <= 7) return "Senior";
+		if (years <= 12) return "Staff";
+		return "Principal";
+	}, []);
+	
+
+	useEffect(() => {
+		if (selectedCategory && !selectedRole) {
+			const availableRoles = getRolesByCategory(newSalaryData, selectedCategory);
+			if (availableRoles.length > 0) {
+				setSelectedRole(availableRoles[0]);
+			}
+		}
+	}, [selectedCategory, selectedRole, newSalaryData]);
 
 	useEffect(() => {
 		if (isMobileSidebarOpen) {
@@ -60,54 +63,149 @@ export default function SalaryAnalyzer() {
 		};
 	}, [isMobileSidebarOpen]);
 
-	const experienceRange = useMemo(() => {
-		const years = experience[0];
-		if (years <= 2) return "0-2";
-		if (years <= 5) return "2-5";
-		if (years <= 7) return "5-7";
-		if (years <= 12) return "7-12";
-		return "12+";
-	}, [experience]);
 
 	const calculatedSalary = useMemo(() => {
-		const base = salaryData[selectedArea as keyof typeof salaryData];
-		const expMultiplier =
-			experienceMultipliers[
-				experienceRange as keyof typeof experienceMultipliers
-			];
-		const intlMultiplier = hasInternational ? base.intl_multiplier : 1;
-
-		const baseSalary = {
-			min: Math.round(base.min * expMultiplier * intlMultiplier),
-			avg: Math.round(base.avg * expMultiplier * intlMultiplier),
-			max: Math.round(base.max * expMultiplier * intlMultiplier),
+		if (selectedRole) {
+			const countryCode = mapCountryNameToCode(selectedCountry, newSalaryData);
+			const experienceLevel = getExperienceLevel(experience[0]);
+			
+			if (countryCode) {
+				const salary = getSalary(newSalaryData, selectedRole, countryCode, experienceLevel);
+				
+				if (salary !== null) {
+					const intlMultiplier = hasInternational ? 1.2 : 1.0; 
+					const adjustedSalary = Math.round(salary * intlMultiplier);
+					
+					return {
+						min: Math.round(adjustedSalary * 0.8),
+						avg: adjustedSalary,
+						max: Math.round(adjustedSalary * 1.2),
+					};
+				}
+			}
+			
+			const continentMapping: Record<string, Continent> = {
+				"Europa": "Europe",
+				"Ásia": "Asia",
+				"Europe": "Europe",
+				"Asia": "Asia",
+			};
+			
+			const continent = continentMapping[selectedCountry];
+			
+			if (continent) {
+				const salary = getSalaryByContinent(newSalaryData, selectedRole, continent, experienceLevel);
+				
+				if (salary !== null) {
+					const intlMultiplier = hasInternational ? 1.2 : 1.0;
+					const adjustedSalary = Math.round(salary * intlMultiplier);
+					
+					return {
+						min: Math.round(adjustedSalary * 0.8),
+						avg: adjustedSalary,
+						max: Math.round(adjustedSalary * 1.2),
+					};
+				}
+			}
+		}
+		
+		return {
+			min: 5000,
+			avg: 8000,
+			max: 12000,
 		};
-
-		return calculateCountrySalary(baseSalary, selectedCountry);
-	}, [selectedArea, experienceRange, hasInternational, selectedCountry]);
+	}, [selectedRole, hasInternational, selectedCountry, newSalaryData, experience, getExperienceLevel]);
 
 	const chartData = useMemo(() => {
-		return Object.entries(salaryData).map(([area]) => {
-			const nationalSalary = getCountrySalaryForArea(area, selectedCountry);
-			const usaSalary = getCountrySalaryForArea(area, "United States");
-
-			return {
-				area,
-				salario_base: nationalSalary,
-				salario_internacional: usaSalary,
-			};
-		});
-	}, [selectedCountry]);
+		const countryCode = mapCountryNameToCode(selectedCountry, newSalaryData);
+		const experienceLevel = getExperienceLevel(experience[0]);
+		
+		if (!countryCode) return [];
+		
+		const intlMultiplier = 1.2;
+		
+		if (comparisonType === 'stacks') {
+			const availableRoles = getRolesByCategory(newSalaryData, selectedCategory);
+			
+			return availableRoles.map(role => {
+				const nationalSalary = getSalary(newSalaryData, role, countryCode, experienceLevel) || 0;
+				const usaSalary = getSalary(newSalaryData, role, "USA", experienceLevel) || 0;
+				
+				return {
+					area: role,
+					salario_base: nationalSalary,
+					salario_internacional: usaSalary,
+					intlMultiplier,
+				};
+			});
+		} else {
+			const allCategories = Object.keys(newSalaryData.categories) as Category[];
+			
+			return allCategories
+				.map(category => {
+					const categoryRoles = getRolesByCategory(newSalaryData, category);
+					if (categoryRoles.length === 0) return null;
+					
+					const nationalSalaries = categoryRoles
+						.map(role => getSalary(newSalaryData, role, countryCode, experienceLevel) || 0)
+						.filter(salary => salary > 0);
+					
+					const usaSalaries = categoryRoles
+						.map(role => getSalary(newSalaryData, role, "USA", experienceLevel) || 0)
+						.filter(salary => salary > 0);
+					
+					const avgNationalSalary = nationalSalaries.length > 0 
+						? Math.round(nationalSalaries.reduce((sum, salary) => sum + salary, 0) / nationalSalaries.length)
+						: 0;
+					
+					const avgUsaSalary = usaSalaries.length > 0 
+						? Math.round(usaSalaries.reduce((sum, salary) => sum + salary, 0) / usaSalaries.length)
+						: 0;
+					
+					return {
+						area: category,
+						salario_base: avgNationalSalary,
+						salario_internacional: avgUsaSalary,
+						intlMultiplier,
+					};
+				})
+				.filter((item): item is NonNullable<typeof item> => item !== null);
+		}
+	}, [selectedCountry, selectedCategory, newSalaryData, experience, comparisonType, getExperienceLevel]);
 
 	const countryChartData = useMemo(() => {
+		const availableRoles = getRolesByCategory(newSalaryData, selectedCategory);
+		const defaultRole = availableRoles[0];
+		const experienceLevel = getExperienceLevel(experience[0]);
+		
+		if (!defaultRole) return [];
+		
 		const baseCountries = countryData.map((country) => {
-			let countryForCalculation = country.country;
-			if (country.country === "Brasil") countryForCalculation = "Brazil";
-			if (country.country === "EUA") countryForCalculation = "United States";
-
+			let countryCode: CountryCode | null = null;
+			
+			if (country.country === "EUA") {
+				countryCode = "USA";
+			} else if (country.country === "Europa") {
+				const salary = getSalaryByContinent(newSalaryData, defaultRole, "Europe", experienceLevel);
+				return {
+					country: country.country,
+					salary: salary || 0,
+				};
+			} else if (country.country === "Ásia") {
+				const salary = getSalaryByContinent(newSalaryData, defaultRole, "Asia", experienceLevel);
+				return {
+					country: country.country,
+					salary: salary || 0,
+				};
+			} else {
+				countryCode = mapCountryNameToCode(country.country, newSalaryData);
+			}
+			
+			const salary = countryCode ? getSalary(newSalaryData, defaultRole, countryCode, experienceLevel) : 0;
+			
 			return {
 				country: country.country,
-				salary: getCountrySalaryForArea(selectedArea, countryForCalculation),
+				salary: salary || 0,
 			};
 		});
 
@@ -115,27 +213,22 @@ export default function SalaryAnalyzer() {
 		const isSelectedCountryInList = baseCountries.some(
 			(item) =>
 				item.country.toLowerCase() === selectedCountryName.toLowerCase() ||
-				(selectedCountryName === "Brazil" && item.country === "Brasil") ||
 				(selectedCountryName === "United States" && item.country === "EUA"),
 		);
 
-		if (
-			!isSelectedCountryInList &&
-			selectedCountryName !== "Brazil" &&
-			selectedCountryName !== "United States"
-		) {
-			const selectedCountrySalary = getCountrySalaryForArea(
-				selectedArea,
-				selectedCountryName,
-			);
-			baseCountries.push({
-				country: selectedCountryName,
-				salary: selectedCountrySalary,
-			});
+		if (!isSelectedCountryInList) {
+			const countryCode = mapCountryNameToCode(selectedCountryName, newSalaryData);
+			if (countryCode && defaultRole) {
+				const salary = getSalary(newSalaryData, defaultRole, countryCode, experienceLevel);
+				baseCountries.push({
+					country: selectedCountryName,
+					salary: salary || 0,
+				});
+			}
 		}
 
 		return baseCountries;
-	}, [selectedArea, selectedCountry]);
+	}, [selectedCountry, selectedCategory, newSalaryData, experience, getExperienceLevel]);
 
 	return (
 		<div className="min-h-screen bg-background text-foreground">
@@ -182,16 +275,18 @@ export default function SalaryAnalyzer() {
 					/>
 				)}
 
-				{/* Sidebar desktop */}
 				<div className="hidden lg:block w-96 bg-background fixed left-0 top-16 h-[calc(100dvh-4rem)] overflow-y-auto">
 					<div className="p-4 pt-6">
 						<FilterSidebar
-							selectedArea={selectedArea}
-							setSelectedArea={setSelectedArea}
+							selectedCategory={selectedCategory}
+							setSelectedCategory={setSelectedCategory}
+							selectedRole={selectedRole}
+							setSelectedRole={setSelectedRole}
 							experience={experience}
 							setExperience={setExperience}
 							hasInternational={hasInternational}
 							setHasInternational={setHasInternational}
+							newSalaryData={newSalaryData}
 						/>
 					</div>
 				</div>
@@ -214,12 +309,15 @@ export default function SalaryAnalyzer() {
 					</div>
 					<div className="p-4 overflow-y-auto h-[calc(100dvh-4rem)] pb-[env(safe-area-inset-bottom)]">
 						<FilterSidebar
-							selectedArea={selectedArea}
-							setSelectedArea={setSelectedArea}
+							selectedCategory={selectedCategory}
+							setSelectedCategory={setSelectedCategory}
+							selectedRole={selectedRole}
+							setSelectedRole={setSelectedRole}
 							experience={experience}
 							setExperience={setExperience}
 							hasInternational={hasInternational}
 							setHasInternational={setHasInternational}
+							newSalaryData={newSalaryData}
 							hideTitle={true}
 						/>
 					</div>
@@ -241,17 +339,18 @@ export default function SalaryAnalyzer() {
 							<InternationalImpact
 								hasInternational={hasInternational}
 								calculatedSalary={calculatedSalary}
-								selectedArea={selectedArea}
 							/>
 
 							<SalaryComparisonChart
 								chartData={chartData}
 								selectedCountry={selectedCountry}
 								hasInternational={hasInternational}
+								onToggleComparisonType={() => setComparisonType(prev => prev === 'stacks' ? 'areas' : 'stacks')}
+								comparisonType={comparisonType}
 							/>
 
 							<RegionalComparison
-								selectedArea={selectedArea}
+								selectedArea={selectedCategory}
 								regionChartData={countryChartData}
 							/>
 						</div>
