@@ -8,43 +8,67 @@ import {
 } from "./ui/select";
 import { Slider } from "./ui/slider";
 import { Switch } from "./ui/switch";
-import { salaryData } from "../utils/dataArea";
-import { areaIcons } from "../utils/dataArea";
-import { useState } from "react";
+import { getCategories, getRolesByCategory } from "../utils/salaryDataUtils";
+import type { SalaryData, Category, RoleName } from "../types/salaryTypes";
+import { useEffect } from "react";
+import {
+	Brain,
+	Settings,
+	Smartphone,
+	Cloud,
+	Database,
+	Shield,
+} from "lucide-react";
 
-const stackData = [
-	"Node.js",
-	"Python",
-	"Java",
-	"Solidity",
-	"Go",
-	"React",
-	"TypeScript",
-	"Rust",
-	"C++",
-	"PHP",
-];
+const categoryIcons: Record<Category, React.ComponentType<{ className?: string }>> = {
+	'Frontend': Code,
+	'Backend': Code,
+	'Full-stack': Code,
+	'AI/ML': Brain,
+	'Data': Database,
+	'Cloud': Cloud,
+	'Security': Shield,
+	'DevOps': Settings,
+	'Web3': Code,
+	'Mobile': Smartphone,
+	'Management': Settings,
+};
+
 
 interface FilterSidebarProps {
-	selectedArea: string;
-	setSelectedArea: (area: string) => void;
+	selectedCategory: Category;
+	setSelectedCategory: (category: Category) => void;
+	selectedRole: RoleName | null;
+	setSelectedRole: (role: RoleName | null) => void;
 	experience: number[];
 	setExperience: (experience: number[]) => void;
 	hasInternational: boolean;
 	setHasInternational: (hasInternational: boolean) => void;
+	newSalaryData: SalaryData;
 	hideTitle?: boolean;
 }
 
 export default function FilterSidebar({
-	selectedArea,
-	setSelectedArea,
+	selectedCategory,
+	setSelectedCategory,
+	selectedRole,
+	setSelectedRole,
 	experience,
 	setExperience,
 	hasInternational,
 	setHasInternational,
+	newSalaryData,
 	hideTitle = false,
 }: FilterSidebarProps) {
-	const [selectedStack, setSelectedStack] = useState("");
+	
+	const categories = getCategories(newSalaryData);
+	const availableRoles = getRolesByCategory(newSalaryData, selectedCategory);
+	
+	useEffect(() => {
+		if (selectedRole && !availableRoles.includes(selectedRole)) {
+			setSelectedRole(null);
+		}
+	}, [selectedRole, availableRoles, setSelectedRole]);
 
 	return (
 		<div className="space-y-4 bg-card/50 border border-border rounded-lg p-3">
@@ -56,16 +80,16 @@ export default function FilterSidebar({
 			)}
 			<div className="space-y-4">
 				<div className="space-y-2">
-					<p className="text-sm font-medium">Área de Atuação</p>
+					<p className="text-sm font-medium">Categoria</p>
 					<div className="grid grid-cols-1 gap-1.5 mt-2">
-						{Object.keys(salaryData).map((area) => {
-							const IconComponent = areaIcons[area as keyof typeof areaIcons];
-							const isSelected = selectedArea === area;
+						{categories.map((category) => {
+							const IconComponent = categoryIcons[category];
+							const isSelected = selectedCategory === category;
 							return (
 								<button
-									key={area}
+									key={category}
 									type="button"
-									onClick={() => setSelectedArea(area)}
+									onClick={() => setSelectedCategory(category)}
 									className={`flex items-center gap-2.5 p-2.5 rounded-lg border transition-all text-left ${
 										isSelected
 											? "border-primary bg-primary text-white font-medium"
@@ -73,12 +97,29 @@ export default function FilterSidebar({
 									}`}
 								>
 									<IconComponent className="w-4 h-4 flex-shrink-0" />
-									<span className="text-sm truncate">{area}</span>
+									<span className="text-sm truncate">{category}</span>
 								</button>
 							);
 						})}
 					</div>
 				</div>
+
+				<div className="space-y-2">
+					<p className="text-sm font-medium">Stack Específica</p>
+					<Select value={selectedRole || ""} onValueChange={(value) => setSelectedRole(value as RoleName)}>
+						<SelectTrigger className="bg-background border-primary/50 hover:border-primary focus:ring-2 focus:ring-primary/60 text-foreground">
+							<SelectValue placeholder="Selecione uma stack" />
+						</SelectTrigger>
+						<SelectContent className="bg-card text-foreground border border-primary/30 shadow-lg">
+							{availableRoles.map((role) => (
+								<SelectItem key={role} value={role}>
+									{role}
+								</SelectItem>
+							))}
+						</SelectContent>
+					</Select>
+				</div>
+
 
 				<div className="space-y-2">
 					<p className="text-sm font-medium">
@@ -108,21 +149,6 @@ export default function FilterSidebar({
 					/>
 				</div>
 
-				<div className="space-y-2">
-					<p className="text-sm font-medium">Stack Principal</p>
-					<Select value={selectedStack} onValueChange={setSelectedStack}>
-						<SelectTrigger className="bg-background border-primary/50 hover:border-primary focus:ring-2 focus:ring-primary/60 text-foreground">
-							<SelectValue placeholder="Selecione uma stack" />
-						</SelectTrigger>
-						<SelectContent className="bg-card text-foreground border border-primary/30 shadow-lg">
-							{stackData.map((stack) => (
-								<SelectItem key={stack} value={stack}>
-									{stack}
-								</SelectItem>
-							))}
-						</SelectContent>
-					</Select>
-				</div>
 			</div>
 		</div>
 	);
