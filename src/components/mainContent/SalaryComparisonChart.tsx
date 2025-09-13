@@ -11,17 +11,21 @@ import {
 	YAxis,
 } from "recharts";
 import { Card } from "../ui/card";
+import { simplifyStackName } from "../../utils/salaryDataUtils";
 
 interface SalaryComparisonDatum {
 	area: string;
 	salario_base: number;
 	salario_internacional: number;
+	intlMultiplier?: number;
 }
 
 interface SalaryComparisonChartProps {
 	chartData: SalaryComparisonDatum[];
 	selectedCountry?: string;
 	hasInternational: boolean;
+	onToggleComparisonType: () => void;
+	comparisonType: 'stacks' | 'areas';
 }
 
 interface TooltipPayload {
@@ -49,7 +53,7 @@ const CustomTooltip = ({ active, payload, label }: CustomTooltipProps) => {
 							style={{ backgroundColor: entry.color }}
 						/>
 						<span className="text-sm text-foreground">
-							{entry.name}: <span className="font-medium">R$ {entry.value?.toLocaleString()}</span>
+							{entry.name}: <span className="font-medium">$ {entry.value?.toLocaleString()}</span>
 						</span>
 					</div>
 				))}
@@ -59,15 +63,35 @@ const CustomTooltip = ({ active, payload, label }: CustomTooltipProps) => {
 	return null;
 };
 
+
+
 export function SalaryComparisonChart({
 	chartData,
 	selectedCountry = "País Selecionado",
 	hasInternational,
+	onToggleComparisonType,
+	comparisonType,
 }: SalaryComparisonChartProps) {
 	const [showInternationalComparison, setShowInternationalComparison] = useState(false);
 
-	const shouldShowButton = !hasInternational;
+	const shouldShowInternationalButton = !hasInternational;
 	const showComparison = hasInternational || showInternationalComparison;
+	
+	const processedChartData = chartData.map(item => {
+		const simplifiedItem = {
+			...item,
+			area: comparisonType === 'stacks' ? simplifyStackName(item.area) : item.area,
+		};
+		
+		if ((hasInternational || showInternationalComparison) && item.intlMultiplier) {
+			return {
+				...simplifiedItem,
+				salario_base: item.salario_base,
+				salario_internacional: item.salario_internacional * item.intlMultiplier,
+			};
+		}
+		return simplifiedItem;
+	});
 
 	return (
 		<Card>
@@ -75,30 +99,37 @@ export function SalaryComparisonChart({
 				<div className="flex items-center justify-between">
 					<CardTitle className="flex items-center gap-2">
 						<BarChart className="w-5 h-5" />
-						{showComparison 
-							? `Comparação Salarial por Área - ${selectedCountry} vs EUA`
-							: `Salário por Área - ${selectedCountry}`
-						}
+						Comparação Salarial com experiência internacional
 					</CardTitle>
-					{shouldShowButton && (
+					<div className="flex gap-2">
 						<Button
 							size="sm"
-							onClick={() => setShowInternationalComparison(!showInternationalComparison)}
-							className={`text-sm transition-colors border ${
-								showInternationalComparison 
-									? "bg-[#3a1090] hover:bg-[#2d0a70] border-[#3a1090] text-white" 
-									: "bg-[#4814b0] hover:bg-[#3a1090] border-[#4814b0] text-white"
-							}`}
+							variant="outline"
+							onClick={onToggleComparisonType}
+							className="text-sm transition-colors border border-primary/50 hover:border-primary"
 						>
-							+ Internacional
+							{comparisonType === 'stacks' ? 'Ver Áreas' : 'Ver Stacks'}
 						</Button>
-					)}
+						{shouldShowInternationalButton && (
+							<Button
+								size="sm"
+								onClick={() => setShowInternationalComparison(!showInternationalComparison)}
+								className={`text-sm transition-colors border ${
+									showInternationalComparison 
+										? "bg-[#3a1090] hover:bg-[#2d0a70] border-[#3a1090] text-white" 
+										: "bg-[#4814b0] hover:bg-[#3a1090] border-[#4814b0] text-white"
+								}`}
+							>
+								+ Internacional
+							</Button>
+						)}
+					</div>
 				</div>
 			</CardHeader>
 			<CardContent>
 				<div className="h-64 sm:h-80">
 					<ResponsiveContainer width="100%" height="100%">
-						<BarChart data={chartData}>
+						<BarChart data={processedChartData}>
 							<CartesianGrid
 								strokeDasharray="3 3"
 								stroke="rgba(255,255,255,0.15)"

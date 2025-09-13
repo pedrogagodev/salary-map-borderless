@@ -15,7 +15,7 @@ export function SalaryOverviewCards({
 							<div>
 								<p className="text-sm text-muted-foreground">Mínimo</p>
 								<p className="text-xl sm:text-2xl font-bold text-foreground">
-									R$ {calculatedSalary.min.toLocaleString()}
+									$ {calculatedSalary.min.toLocaleString()}
 								</p>
 							</div>
 							<DollarSign className="w-6 h-6 sm:w-8 sm:h-8 text-primary" />
@@ -29,7 +29,7 @@ export function SalaryOverviewCards({
 							<div>
 								<p className="text-sm text-muted-foreground">Média</p>
 								<p className="text-xl sm:text-2xl font-bold text-foreground">
-									R$ {calculatedSalary.avg.toLocaleString()}
+									$ {calculatedSalary.avg.toLocaleString()}
 								</p>
 							</div>
 							<TrendingUp className="w-6 h-6 sm:w-8 sm:h-8 text-secondary" />
@@ -43,7 +43,7 @@ export function SalaryOverviewCards({
 							<div>
 								<p className="text-sm text-muted-foreground">Máximo</p>
 								<p className="text-xl sm:text-2xl font-bold text-foreground">
-									R$ {calculatedSalary.max.toLocaleString()}
+									$ {calculatedSalary.max.toLocaleString()}
 								</p>
 							</div>
 							<Users className="w-6 h-6 sm:w-8 sm:h-8 text-accent" />

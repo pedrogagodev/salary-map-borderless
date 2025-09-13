@@ -42,7 +42,7 @@ const CustomRegionalTooltip = ({ active, payload, label }: CustomRegionalTooltip
 							style={{ backgroundColor: entry.color }}
 						/>
 						<span className="text-sm text-foreground">
-							Salário: <span className="font-medium">R$ {entry.value?.toLocaleString()}</span>
+							Salário: <span className="font-medium">$ {entry.value?.toLocaleString()}</span>
 						</span>
 					</div>
 				))}
