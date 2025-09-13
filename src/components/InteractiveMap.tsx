@@ -11,7 +11,7 @@ interface InteractiveMapProps {
 	countryData?: { country: string; multiplier: number; color: string }[];
 }
 
-type GroupKey = "United States" | "Brazil" | "Europe" | "Asia";
+type GroupKey = "United States" | "Europe" | "Asia";
 
 type PropertiesRecord = Record<string, unknown>;
 
@@ -51,7 +51,6 @@ export function InteractiveMap({
 		const loadGeoData = async () => {
 			try {
 				const regions = [
-					{ key: 'Brazil' as GroupKey, file: 'Brazil.geojson', label: 'Brasil' },
 					{ key: 'United States' as GroupKey, file: 'USA.geojson', label: 'Estados Unidos' },
 					{ key: 'Europe' as GroupKey, file: 'EU-simplified.geojson', label: 'Europa' },
 					{ key: 'Asia' as GroupKey, file: 'AS-simplified.geojson', label: 'Ásia' }
@@ -119,7 +118,6 @@ export function InteractiveMap({
 		const group = getCustomProp<GroupKey>(feature, "__group");
 		const labelByGroup: Record<GroupKey, string> = {
 			"United States": "Estados Unidos",
-			Brazil: "Brasil",
 			Europe: "Europa",
 			Asia: "Ásia",
 		};
