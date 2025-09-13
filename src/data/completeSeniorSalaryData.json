@@ -1,0 +1,455 @@
+{
+  "metadata": {
+    "version": "2025.2",
+    "currency": "USD",
+    "lastUpdated": "2025-09-12",
+    "experienceLevels": [
+      "Junior",
+      "Mid",
+      "Senior",
+      "Staff",
+      "Principal"
+    ]
+  },
+  "roles": {
+    "Frontend TypeScript": {
+      "category": "Frontend",
+      "countries": {
+        "Canada": { "Junior": 61500, "Mid": 73800, "Senior": 82000, "Staff": 98400, "Principal": 120950 },
+        "Dubai": { "Junior": 56250, "Mid": 67500, "Senior": 75000, "Staff": 90000, "Principal": 110625 },
+        "London": { "Junior": 51000, "Mid": 61200, "Senior": 68000, "Staff": 81600, "Principal": 100300 },
+        "Germany": { "Junior": 54000, "Mid": 64800, "Senior": 72000, "Staff": 86400, "Principal": 106200 },
+        "USA": { "Junior": 101250, "Mid": 121500, "Senior": 135000, "Staff": 162000, "Principal": 199125 },
+        "Singapore": { "Junior": 52500, "Mid": 63000, "Senior": 70000, "Staff": 84000, "Principal": 103250 },
+        "China": { "Junior": 43500, "Mid": 52200, "Senior": 58000, "Staff": 69600, "Principal": 85550 },
+        "Australia": { "Junior": 63750, "Mid": 76500, "Senior": 85000, "Staff": 102000, "Principal": 125375 },
+        "Sweden": { "Junior": 52500, "Mid": 63000, "Senior": 70000, "Staff": 84000, "Principal": 103250 },
+        "Netherlands": { "Junior": 58500, "Mid": 70200, "Senior": 78000, "Staff": 93600, "Principal": 115050 },
+        "Switzerland": { "Junior": 86250, "Mid": 103500, "Senior": 115000, "Staff": 138000, "Principal": 169625 }
+      }
+    },
+    "Golang Developer": {
+      "category": "Backend",
+      "countries": {
+        "Canada": { "Junior": 63000, "Mid": 75600, "Senior": 84000, "Staff": 100800, "Principal": 123900 },
+        "Dubai": { "Junior": 57881, "Mid": 69458, "Senior": 77175, "Staff": 92610, "Principal": 113833 },
+        "London": { "Junior": 52762, "Mid": 63315, "Senior": 70350, "Staff": 84420, "Principal": 103766 },
+        "Germany": { "Junior": 58275, "Mid": 69930, "Senior": 77700, "Staff": 93240, "Principal": 114608 },
+        "USA": { "Junior": 113400, "Mid": 136080, "Senior": 151200, "Staff": 181440, "Principal": 223020 },
+        "Singapore": { "Junior": 43312, "Mid": 51975, "Senior": 57750, "Staff": 69300, "Principal": 85181 },
+        "China": { "Junior": 44888, "Mid": 53865, "Senior": 59850, "Staff": 71820, "Principal": 88279 },
+        "Australia": { "Junior": 62212, "Mid": 74655, "Senior": 82950, "Staff": 99540, "Principal": 122351 },
+        "Sweden": { "Junior": 44100, "Mid": 52920, "Senior": 58800, "Staff": 70560, "Principal": 86730 },
+        "Netherlands": { "Junior": 60638, "Mid": 72765, "Senior": 80850, "Staff": 97020, "Principal": 119254 },
+        "Switzerland": { "Junior": 94500, "Mid": 113400, "Senior": 126000, "Staff": 151200, "Principal": 185850 }
+      }
+    },
+    "Java Developer": {
+      "category": "Backend",
+      "countries": {
+        "Canada": { "Junior": 57000, "Mid": 68400, "Senior": 76000, "Staff": 91200, "Principal": 112100 },
+        "Dubai": { "Junior": 52369, "Mid": 62842, "Senior": 69825, "Staff": 83790, "Principal": 102992 },
+        "London": { "Junior": 47738, "Mid": 57285, "Senior": 63650, "Staff": 76380, "Principal": 93884 },
+        "Germany": { "Junior": 52725, "Mid": 63270, "Senior": 70300, "Staff": 84360, "Principal": 103692 },
+        "USA": { "Junior": 102600, "Mid": 123120, "Senior": 136800, "Staff": 164160, "Principal": 201780 },
+        "Singapore": { "Junior": 39188, "Mid": 47025, "Senior": 52250, "Staff": 62700, "Principal": 77069 },
+        "China": { "Junior": 40612, "Mid": 48735, "Senior": 54150, "Staff": 64980, "Principal": 79871 },
+        "Australia": { "Junior": 56288, "Mid": 67545, "Senior": 75050, "Staff": 90060, "Principal": 110699 },
+        "Sweden": { "Junior": 39900, "Mid": 47880, "Senior": 53200, "Staff": 63840, "Principal": 78470 },
+        "Netherlands": { "Junior": 54862, "Mid": 65835, "Senior": 73150, "Staff": 87780, "Principal": 107896 },
+        "Switzerland": { "Junior": 85500, "Mid": 102600, "Senior": 114000, "Staff": 136800, "Principal": 168150 }
+      }
+    },
+    "Backend TypeScript": {
+      "category": "Backend",
+      "countries": {
+        "Canada": { "Junior": 63750, "Mid": 76500, "Senior": 85000, "Staff": 102000, "Principal": 125375 },
+        "Dubai": { "Junior": 58500, "Mid": 70200, "Senior": 78000, "Staff": 93600, "Principal": 115050 },
+        "London": { "Junior": 54000, "Mid": 64800, "Senior": 72000, "Staff": 86400, "Principal": 106200 },
+        "Germany": { "Junior": 57000, "Mid": 68400, "Senior": 76000, "Staff": 91200, "Principal": 112100 },
+        "USA": { "Junior": 105000, "Mid": 126000, "Senior": 140000, "Staff": 168000, "Principal": 206500 },
+        "Singapore": { "Junior": 54000, "Mid": 64800, "Senior": 72000, "Staff": 86400, "Principal": 106200 },
+        "China": { "Junior": 45000, "Mid": 54000, "Senior": 60000, "Staff": 72000, "Principal": 88500 },
+        "Australia": { "Junior": 66000, "Mid": 79200, "Senior": 88000, "Staff": 105600, "Principal": 129800 },
+        "Sweden": { "Junior": 54000, "Mid": 64800, "Senior": 72000, "Staff": 86400, "Principal": 106200 },
+        "Netherlands": { "Junior": 61500, "Mid": 73800, "Senior": 82000, "Staff": 98400, "Principal": 120950 },
+        "Switzerland": { "Junior": 88500, "Mid": 106200, "Senior": 118000, "Staff": 141600, "Principal": 174050 }
+      }
+    },
+    "Backend Python": {
+      "category": "Backend",
+      "countries": {
+        "Canada": { "Junior": 66000, "Mid": 79200, "Senior": 88000, "Staff": 105600, "Principal": 129800 },
+        "Dubai": { "Junior": 61500, "Mid": 73800, "Senior": 82000, "Staff": 98400, "Principal": 120950 },
+        "London": { "Junior": 56250, "Mid": 67500, "Senior": 75000, "Staff": 90000, "Principal": 110625 },
+        "Germany": { "Junior": 60000, "Mid": 72000, "Senior": 80000, "Staff": 96000, "Principal": 118000 },
+        "USA": { "Junior": 112500, "Mid": 135000, "Senior": 150000, "Staff": 180000, "Principal": 221250 },
+        "Singapore": { "Junior": 56250, "Mid": 67500, "Senior": 75000, "Staff": 90000, "Principal": 110625 },
+        "China": { "Junior": 48750, "Mid": 58500, "Senior": 65000, "Staff": 78000, "Principal": 95875 },
+        "Australia": { "Junior": 69000, "Mid": 82800, "Senior": 92000, "Staff": 110400, "Principal": 135700 },
+        "Sweden": { "Junior": 56250, "Mid": 67500, "Senior": 75000, "Staff": 90000, "Principal": 110625 },
+        "Netherlands": { "Junior": 63750, "Mid": 76500, "Senior": 85000, "Staff": 102000, "Principal": 125375 },
+        "Switzerland": { "Junior": 93750, "Mid": 112500, "Senior": 125000, "Staff": 150000, "Principal": 184375 }
+      }
+    },
+    "Full-stack Python": {
+      "category": "Full-stack",
+      "countries": {
+        "Canada": { "Junior": 60000, "Mid": 72000, "Senior": 80000, "Staff": 96000, "Principal": 118000 },
+        "Dubai": { "Junior": 55125, "Mid": 66150, "Senior": 73500, "Staff": 88200, "Principal": 108412 },
+        "London": { "Junior": 50250, "Mid": 60300, "Senior": 67000, "Staff": 80400, "Principal": 98825 },
+        "Germany": { "Junior": 55500, "Mid": 66600, "Senior": 74000, "Staff": 88800, "Principal": 109150 },
+        "USA": { "Junior": 108000, "Mid": 129600, "Senior": 144000, "Staff": 172800, "Principal": 212400 },
+        "Singapore": { "Junior": 41250, "Mid": 49500, "Senior": 55000, "Staff": 66000, "Principal": 81125 },
+        "China": { "Junior": 42750, "Mid": 51300, "Senior": 57000, "Staff": 68400, "Principal": 84075 },
+        "Australia": { "Junior": 59250, "Mid": 71100, "Senior": 79000, "Staff": 94800, "Principal": 116525 },
+        "Sweden": { "Junior": 42000, "Mid": 50400, "Senior": 56000, "Staff": 67200, "Principal": 82600 },
+        "Netherlands": { "Junior": 57750, "Mid": 69300, "Senior": 77000, "Staff": 92400, "Principal": 113575 },
+        "Switzerland": { "Junior": 90000, "Mid": 108000, "Senior": 120000, "Staff": 144000, "Principal": 177000 }
+      }
+    },
+    "Full-stack TypeScript": {
+      "category": "Full-stack",
+      "countries": {
+        "Canada": { "Junior": 57000, "Mid": 68400, "Senior": 76000, "Staff": 91200, "Principal": 112100 },
+        "Dubai": { "Junior": 52369, "Mid": 62842, "Senior": 69825, "Staff": 83790, "Principal": 102992 },
+        "London": { "Junior": 47738, "Mid": 57285, "Senior": 63650, "Staff": 76380, "Principal": 93884 },
+        "Germany": { "Junior": 52725, "Mid": 63270, "Senior": 70300, "Staff": 84360, "Principal": 103692 },
+        "USA": { "Junior": 102600, "Mid": 123120, "Senior": 136800, "Staff": 164160, "Principal": 201780 },
+        "Singapore": { "Junior": 39188, "Mid": 47025, "Senior": 52250, "Staff": 62700, "Principal": 77069 },
+        "China": { "Junior": 40612, "Mid": 48735, "Senior": 54150, "Staff": 64980, "Principal": 79871 },
+        "Australia": { "Junior": 56288, "Mid": 67545, "Senior": 75050, "Staff": 90060, "Principal": 110699 },
+        "Sweden": { "Junior": 39900, "Mid": 47880, "Senior": 53200, "Staff": 63840, "Principal": 78470 },
+        "Netherlands": { "Junior": 54862, "Mid": 65835, "Senior": 73150, "Staff": 87780, "Principal": 107896 },
+        "Switzerland": { "Junior": 85500, "Mid": 102600, "Senior": 114000, "Staff": 136800, "Principal": 168150 }
+      }
+    },
+    "Data Analyst": {
+      "category": "Data",
+      "countries": {
+        "Canada": { "Junior": 45000, "Mid": 54000, "Senior": 60000, "Staff": 72000, "Principal": 88500 },
+        "Dubai": { "Junior": 41344, "Mid": 49612, "Senior": 55125, "Staff": 66150, "Principal": 81309 },
+        "London": { "Junior": 37688, "Mid": 45225, "Senior": 50250, "Staff": 60300, "Principal": 74119 },
+        "Germany": { "Junior": 41625, "Mid": 49950, "Senior": 55500, "Staff": 66600, "Principal": 81862 },
+        "USA": { "Junior": 81000, "Mid": 97200, "Senior": 108000, "Staff": 129600, "Principal": 159300 },
+        "Singapore": { "Junior": 30938, "Mid": 37125, "Senior": 41250, "Staff": 49500, "Principal": 60844 },
+        "China": { "Junior": 32062, "Mid": 38475, "Senior": 42750, "Staff": 51300, "Principal": 63056 },
+        "Australia": { "Junior": 44438, "Mid": 53325, "Senior": 59250, "Staff": 71100, "Principal": 87394 },
+        "Sweden": { "Junior": 31500, "Mid": 37800, "Senior": 42000, "Staff": 50400, "Principal": 61950 },
+        "Netherlands": { "Junior": 43312, "Mid": 51975, "Senior": 57750, "Staff": 69300, "Principal": 85181 },
+        "Switzerland": { "Junior": 67500, "Mid": 81000, "Senior": 90000, "Staff": 108000, "Principal": 132750 }
+      }
+    },
+    "Data Engineer": {
+      "category": "Data",
+      "countries": {
+        "Canada": { "Junior": 57000, "Mid": 68400, "Senior": 76000, "Staff": 91200, "Principal": 112100 },
+        "Dubai": { "Junior": 52369, "Mid": 62842, "Senior": 69825, "Staff": 83790, "Principal": 102992 },
+        "London": { "Junior": 47738, "Mid": 57285, "Senior": 63650, "Staff": 76380, "Principal": 93884 },
+        "Germany": { "Junior": 52725, "Mid": 63270, "Senior": 70300, "Staff": 84360, "Principal": 103692 },
+        "USA": { "Junior": 102600, "Mid": 123120, "Senior": 136800, "Staff": 164160, "Principal": 201780 },
+        "Singapore": { "Junior": 39188, "Mid": 47025, "Senior": 52250, "Staff": 62700, "Principal": 77069 },
+        "China": { "Junior": 40612, "Mid": 48735, "Senior": 54150, "Staff": 64980, "Principal": 79871 },
+        "Australia": { "Junior": 56288, "Mid": 67545, "Senior": 75050, "Staff": 90060, "Principal": 110699 },
+        "Sweden": { "Junior": 39900, "Mid": 47880, "Senior": 53200, "Staff": 63840, "Principal": 78470 },
+        "Netherlands": { "Junior": 54862, "Mid": 65835, "Senior": 73150, "Staff": 87780, "Principal": 107896 },
+        "Switzerland": { "Junior": 85500, "Mid": 102600, "Senior": 114000, "Staff": 136800, "Principal": 168150 }
+      }
+    },
+    "Data Scientist": {
+      "category": "Data",
+      "countries": {
+        "Canada": { "Junior": 66000, "Mid": 79200, "Senior": 88000, "Staff": 105600, "Principal": 129800 },
+        "Dubai": { "Junior": 60638, "Mid": 72765, "Senior": 80850, "Staff": 97020, "Principal": 119254 },
+        "London": { "Junior": 55275, "Mid": 66330, "Senior": 73700, "Staff": 88440, "Principal": 108708 },
+        "Germany": { "Junior": 61050, "Mid": 73260, "Senior": 81400, "Staff": 97680, "Principal": 120065 },
+        "USA": { "Junior": 118800, "Mid": 142560, "Senior": 158400, "Staff": 190080, "Principal": 233640 },
+        "Singapore": { "Junior": 45375, "Mid": 54450, "Senior": 60500, "Staff": 72600, "Principal": 89238 },
+        "China": { "Junior": 47025, "Mid": 56430, "Senior": 62700, "Staff": 75240, "Principal": 92482 },
+        "Australia": { "Junior": 65175, "Mid": 78210, "Senior": 86900, "Staff": 104280, "Principal": 128178 },
+        "Sweden": { "Junior": 46200, "Mid": 55440, "Senior": 61600, "Staff": 73920, "Principal": 90860 },
+        "Netherlands": { "Junior": 63525, "Mid": 76230, "Senior": 84700, "Staff": 101640, "Principal": 124933 },
+        "Switzerland": { "Junior": 99000, "Mid": 118800, "Senior": 132000, "Staff": 158400, "Principal": 194700 }
+      }
+    },
+    "Machine Learning": {
+      "category": "AI/ML",
+      "countries": {
+        "Canada": { "Junior": 72000, "Mid": 86400, "Senior": 96000, "Staff": 115200, "Principal": 141600 },
+        "Dubai": { "Junior": 66150, "Mid": 79380, "Senior": 88200, "Staff": 105840, "Principal": 130095 },
+        "London": { "Junior": 60300, "Mid": 72360, "Senior": 80400, "Staff": 96480, "Principal": 118590 },
+        "Germany": { "Junior": 66600, "Mid": 79920, "Senior": 88800, "Staff": 106560, "Principal": 130980 },
+        "USA": { "Junior": 129600, "Mid": 155520, "Senior": 172800, "Staff": 207360, "Principal": 254880 },
+        "Singapore": { "Junior": 49500, "Mid": 59400, "Senior": 66000, "Staff": 79200, "Principal": 97350 },
+        "China": { "Junior": 51300, "Mid": 61560, "Senior": 68400, "Staff": 82080, "Principal": 100890 },
+        "Australia": { "Junior": 71100, "Mid": 85320, "Senior": 94800, "Staff": 113760, "Principal": 139830 },
+        "Sweden": { "Junior": 50400, "Mid": 60480, "Senior": 67200, "Staff": 80640, "Principal": 99120 },
+        "Netherlands": { "Junior": 69300, "Mid": 83160, "Senior": 92400, "Staff": 110880, "Principal": 136290 },
+        "Switzerland": { "Junior": 108000, "Mid": 129600, "Senior": 144000, "Staff": 172800, "Principal": 212400 }
+      }
+    },
+    "ML Ops": {
+      "category": "AI/ML",
+      "countries": {
+        "Canada": { "Junior": 69000, "Mid": 82800, "Senior": 92000, "Staff": 110400, "Principal": 135700 },
+        "Dubai": { "Junior": 63394, "Mid": 76072, "Senior": 84525, "Staff": 101430, "Principal": 124674 },
+        "London": { "Junior": 57788, "Mid": 69345, "Senior": 77050, "Staff": 92460, "Principal": 113649 },
+        "Germany": { "Junior": 63825, "Mid": 76590, "Senior": 85100, "Staff": 102120, "Principal": 125523 },
+        "USA": { "Junior": 124200, "Mid": 149040, "Senior": 165600, "Staff": 198720, "Principal": 244260 },
+        "Singapore": { "Junior": 47438, "Mid": 56925, "Senior": 63250, "Staff": 75900, "Principal": 93294 },
+        "China": { "Junior": 49162, "Mid": 58995, "Senior": 65550, "Staff": 78660, "Principal": 96686 },
+        "Australia": { "Junior": 68138, "Mid": 81765, "Senior": 90850, "Staff": 109020, "Principal": 134004 },
+        "Sweden": { "Junior": 48300, "Mid": 57960, "Senior": 64400, "Staff": 77280, "Principal": 94990 },
+        "Netherlands": { "Junior": 66412, "Mid": 79695, "Senior": 88550, "Staff": 106260, "Principal": 130611 },
+        "Switzerland": { "Junior": 103500, "Mid": 124200, "Senior": 138000, "Staff": 165600, "Principal": 203550 }
+      }
+    },
+    "Cloud Specialist": {
+      "category": "Cloud",
+      "countries": {
+        "Canada": { "Junior": 66000, "Mid": 79200, "Senior": 88000, "Staff": 105600, "Principal": 129800 },
+        "Dubai": { "Junior": 60638, "Mid": 72765, "Senior": 80850, "Staff": 97020, "Principal": 119254 },
+        "London": { "Junior": 55275, "Mid": 66330, "Senior": 73700, "Staff": 88440, "Principal": 108708 },
+        "Germany": { "Junior": 61050, "Mid": 73260, "Senior": 81400, "Staff": 97680, "Principal": 120065 },
+        "USA": { "Junior": 118800, "Mid": 142560, "Senior": 158400, "Staff": 190080, "Principal": 233640 },
+        "Singapore": { "Junior": 45375, "Mid": 54450, "Senior": 60500, "Staff": 72600, "Principal": 89238 },
+        "China": { "Junior": 47025, "Mid": 56430, "Senior": 62700, "Staff": 75240, "Principal": 92482 },
+        "Australia": { "Junior": 65175, "Mid": 78210, "Senior": 86900, "Staff": 104280, "Principal": 128178 },
+        "Sweden": { "Junior": 46200, "Mid": 55440, "Senior": 61600, "Staff": 73920, "Principal": 90860 },
+        "Netherlands": { "Junior": 63525, "Mid": 76230, "Senior": 84700, "Staff": 101640, "Principal": 124933 },
+        "Switzerland": { "Junior": 99000, "Mid": 118800, "Senior": 132000, "Staff": 158400, "Principal": 194700 }
+      }
+    },
+    "Multi-cloud Specialist": {
+      "category": "Cloud",
+      "countries": {
+        "Canada": { "Junior": 69000, "Mid": 82800, "Senior": 92000, "Staff": 110400, "Principal": 135700 },
+        "Dubai": { "Junior": 63394, "Mid": 76072, "Senior": 84525, "Staff": 101430, "Principal": 124674 },
+        "London": { "Junior": 57788, "Mid": 69345, "Senior": 77050, "Staff": 92460, "Principal": 113649 },
+        "Germany": { "Junior": 63825, "Mid": 76590, "Senior": 85100, "Staff": 102120, "Principal": 125523 },
+        "USA": { "Junior": 124200, "Mid": 149040, "Senior": 165600, "Staff": 198720, "Principal": 244260 },
+        "Singapore": { "Junior": 47438, "Mid": 56925, "Senior": 63250, "Staff": 75900, "Principal": 93294 },
+        "China": { "Junior": 49162, "Mid": 58995, "Senior": 65550, "Staff": 78660, "Principal": 96686 },
+        "Australia": { "Junior": 68138, "Mid": 81765, "Senior": 90850, "Staff": 109020, "Principal": 134004 },
+        "Sweden": { "Junior": 48300, "Mid": 57960, "Senior": 64400, "Staff": 77280, "Principal": 94990 },
+        "Netherlands": { "Junior": 66412, "Mid": 79695, "Senior": 88550, "Staff": 106260, "Principal": 130611 },
+        "Switzerland": { "Junior": 103500, "Mid": 124200, "Senior": 138000, "Staff": 165600, "Principal": 203550 }
+      }
+    },
+    "SRE": {
+      "category": "DevOps",
+      "countries": {
+        "Canada": { "Junior": 66000, "Mid": 79200, "Senior": 88000, "Staff": 105600, "Principal": 129800 },
+        "Dubai": { "Junior": 60638, "Mid": 72765, "Senior": 80850, "Staff": 97020, "Principal": 119254 },
+        "London": { "Junior": 55275, "Mid": 66330, "Senior": 73700, "Staff": 88440, "Principal": 108708 },
+        "Germany": { "Junior": 61050, "Mid": 73260, "Senior": 81400, "Staff": 97680, "Principal": 120065 },
+        "USA": { "Junior": 118800, "Mid": 142560, "Senior": 158400, "Staff": 190080, "Principal": 233640 },
+        "Singapore": { "Junior": 45375, "Mid": 54450, "Senior": 60500, "Staff": 72600, "Principal": 89238 },
+        "China": { "Junior": 47025, "Mid": 56430, "Senior": 62700, "Staff": 75240, "Principal": 92482 },
+        "Australia": { "Junior": 65175, "Mid": 78210, "Senior": 86900, "Staff": 104280, "Principal": 128178 },
+        "Sweden": { "Junior": 46200, "Mid": 55440, "Senior": 61600, "Staff": 73920, "Principal": 90860 },
+        "Netherlands": { "Junior": 63525, "Mid": 76230, "Senior": 84700, "Staff": 101640, "Principal": 124933 },
+        "Switzerland": { "Junior": 99000, "Mid": 118800, "Senior": 132000, "Staff": 158400, "Principal": 194700 }
+      }
+    },
+    "Infrastructure as Code": {
+      "category": "DevOps",
+      "countries": {
+        "Canada": { "Junior": 63000, "Mid": 75600, "Senior": 84000, "Staff": 100800, "Principal": 123900 },
+        "Dubai": { "Junior": 57881, "Mid": 69458, "Senior": 77175, "Staff": 92610, "Principal": 113833 },
+        "London": { "Junior": 52762, "Mid": 63315, "Senior": 70350, "Staff": 84420, "Principal": 103766 },
+        "Germany": { "Junior": 58275, "Mid": 69930, "Senior": 77700, "Staff": 93240, "Principal": 114608 },
+        "USA": { "Junior": 113400, "Mid": 136080, "Senior": 151200, "Staff": 181440, "Principal": 223020 },
+        "Singapore": { "Junior": 43312, "Mid": 51975, "Senior": 57750, "Staff": 69300, "Principal": 85181 },
+        "China": { "Junior": 44888, "Mid": 53865, "Senior": 59850, "Staff": 71820, "Principal": 88279 },
+        "Australia": { "Junior": 62212, "Mid": 74655, "Senior": 82950, "Staff": 99540, "Principal": 122351 },
+        "Sweden": { "Junior": 44100, "Mid": 52920, "Senior": 58800, "Staff": 70560, "Principal": 86730 },
+        "Netherlands": { "Junior": 60638, "Mid": 72765, "Senior": 80850, "Staff": 97020, "Principal": 119254 },
+        "Switzerland": { "Junior": 94500, "Mid": 113400, "Senior": 126000, "Staff": 151200, "Principal": 185850 }
+      }
+    },
+    "Cybersecurity Specialist": {
+      "category": "Security",
+      "countries": {
+        "Canada":   { "Junior": 75000, "Mid": 90000,  "Senior":100000, "Staff":120000, "Principal":147500 },
+        "Dubai":    { "Junior": 68906, "Mid": 82688,  "Senior":91875,  "Staff":110250, "Principal":135516 },
+        "London":   { "Junior": 62812, "Mid": 75375,  "Senior":83750,  "Staff":100500, "Principal":123531 },
+        "Germany":  { "Junior": 69375, "Mid": 83250,  "Senior":92500,  "Staff":111000, "Principal":136438 },
+        "USA":      { "Junior":135000, "Mid":162000,  "Senior":180000, "Staff":216000, "Principal":265500 },
+        "Singapore":{"Junior":51562, "Mid":61875,   "Senior":68750,  "Staff":82500,  "Principal":101406 },
+        "China":    { "Junior":53438, "Mid":64125,   "Senior":71250,  "Staff":85500,  "Principal":105094 },
+        "Australia":{ "Junior":74062, "Mid":88875,   "Senior":98750,  "Staff":118500, "Principal":145656 },
+        "Sweden":   { "Junior":52500, "Mid":63000,   "Senior":70000,  "Staff":84000,  "Principal":103250 },
+        "Netherlands":{ "Junior":72188, "Mid":86625,  "Senior":96250, "Staff":115500, "Principal":141969 },
+        "Switzerland":{ "Junior":112500,"Mid":135000, "Senior":150000,"Staff":180000,"Principal":221250 }
+      }
+    },
+    "Rust Developer": {
+      "category": "Web3",
+      "countries": {
+        "Canada":   { "Junior": 161250, "Mid": 193500, "Senior": 215000, "Staff": 258000, "Principal": 317125 },
+        "Dubai":    { "Junior": 148125, "Mid": 177750, "Senior": 197500, "Staff": 237000, "Principal": 291375 },
+        "London":   { "Junior": 135000, "Mid": 162000, "Senior": 180000, "Staff": 216000, "Principal": 265500 },
+        "Germany":  { "Junior": 149250, "Mid": 179100, "Senior": 199000, "Staff": 238800, "Principal": 293525 },
+        "USA":      { "Junior": 161250, "Mid": 193500, "Senior": 215000, "Staff": 258000, "Principal": 317125 },
+        "Singapore":{"Junior": 161250, "Mid": 193500, "Senior": 215000, "Staff": 258000, "Principal": 317125 },
+        "China":    { "Junior": 161250, "Mid": 193500, "Senior": 215000, "Staff": 258000, "Principal": 317125 },
+        "Australia":{ "Junior": 161250, "Mid": 193500, "Senior": 215000, "Staff": 258000, "Principal": 317125 },
+        "Sweden":   { "Junior": 161250, "Mid": 193500, "Senior": 215000, "Staff": 258000, "Principal": 317125 },
+        "Netherlands":{ "Junior": 161250, "Mid": 193500, "Senior": 215000, "Staff": 258000, "Principal": 317125 },
+        "Switzerland":{ "Junior": 161250, "Mid": 193500, "Senior": 215000, "Staff": 258000, "Principal": 317125 }
+      }
+    },
+    "Solidity Developer": {
+      "category": "Web3",
+      "countries": {
+        "Canada":   { "Junior": 157500, "Mid": 189000, "Senior": 210000, "Staff": 252000, "Principal": 309750 },
+        "Dubai":    { "Junior": 144375, "Mid": 173250, "Senior": 192500, "Staff": 231000, "Principal": 284125 },
+        "London":   { "Junior": 131250, "Mid": 157500, "Senior": 175000, "Staff": 210000, "Principal": 258125 },
+        "Germany":  { "Junior": 145500, "Mid": 174600, "Senior": 194000, "Staff": 232800, "Principal": 286100 },
+        "USA":      { "Junior": 157500, "Mid": 189000, "Senior": 210000, "Staff": 252000, "Principal": 309750 },
+        "Singapore":{"Junior": 157500, "Mid": 189000, "Senior": 210000, "Staff": 252000, "Principal": 309750 },
+        "China":    { "Junior": 157500, "Mid": 189000, "Senior": 210000, "Staff": 252000, "Principal": 309750 },
+        "Australia":{ "Junior": 157500, "Mid": 189000, "Senior": 210000, "Staff": 252000, "Principal": 309750 },
+        "Sweden":   { "Junior": 157500, "Mid": 189000, "Senior": 210000, "Staff": 252000, "Principal": 309750 },
+        "Netherlands":{ "Junior": 157500, "Mid": 189000, "Senior": 210000, "Staff": 252000, "Principal": 309750 },
+        "Switzerland":{ "Junior": 157500, "Mid": 189000, "Senior": 210000, "Staff": 252000, "Principal": 309750 }
+      }
+    },
+    "Blockchain Developer": {
+      "category": "Web3",
+      "countries": {
+        "Canada":   { "Junior": 172500, "Mid": 207000, "Senior": 230000, "Staff": 276000, "Principal": 339250 },
+        "Dubai":    { "Junior": 158125, "Mid": 189750, "Senior": 210625, "Staff": 252750, "Principal": 310625 },
+        "London":   { "Junior": 144375, "Mid": 173250, "Senior": 192500, "Staff": 231000, "Principal": 284125 },
+        "Germany":  { "Junior": 159375, "Mid": 191250, "Senior": 212500, "Staff": 255000, "Principal": 313125 },
+        "USA":      { "Junior": 172500, "Mid": 207000, "Senior": 230000, "Staff": 276000, "Principal": 339250 },
+        "Singapore":{"Junior": 172500, "Mid": 207000, "Senior": 230000, "Staff": 276000, "Principal": 339250 },
+        "China":    { "Junior": 172500, "Mid": 207000, "Senior": 230000, "Staff": 276000, "Principal": 339250 },
+        "Australia":{ "Junior": 172500, "Mid": 207000, "Senior": 230000, "Staff": 276000, "Principal": 339250 },
+        "Sweden":   { "Junior": 172500, "Mid": 207000, "Senior": 230000, "Staff": 276000, "Principal": 339250 },
+        "Netherlands":{ "Junior": 172500, "Mid": 207000, "Senior": 230000, "Staff": 276000, "Principal": 339250 },
+        "Switzerland":{ "Junior": 172500, "Mid": 207000, "Senior": 230000, "Staff": 276000, "Principal": 339250 }
+      }
+    },
+    "AI Web3 Developer": {
+      "category": "Web3",
+      "countries": {
+        "Canada":   { "Junior": 187500, "Mid": 225000, "Senior": 250000, "Staff": 300000, "Principal": 368750 },
+        "Dubai":    { "Junior": 171875, "Mid": 206250, "Senior": 229167, "Staff": 275000, "Principal": 338542 },
+        "London":   { "Junior": 156250, "Mid": 187500, "Senior": 208333, "Staff": 250000, "Principal": 307292 },
+        "Germany":  { "Junior": 172917, "Mid": 207500, "Senior": 230556, "Staff": 276667, "Principal": 340208 },
+        "USA":      { "Junior": 187500, "Mid": 225000, "Senior": 250000, "Staff": 300000, "Principal": 368750 },
+        "Singapore":{"Junior": 187500, "Mid": 225000, "Senior": 250000, "Staff": 300000, "Principal": 368750 },
+        "China":    { "Junior": 187500, "Mid": 225000, "Senior": 250000, "Staff": 300000, "Principal": 368750 },
+        "Australia":{ "Junior": 187500, "Mid": 225000, "Senior": 250000, "Staff": 300000, "Principal": 368750 },
+        "Sweden":   { "Junior": 187500, "Mid": 225000, "Senior": 250000, "Staff": 300000, "Principal": 368750 },
+        "Netherlands":{ "Junior": 187500, "Mid": 225000, "Senior": 250000, "Staff": 300000, "Principal": 368750 },
+        "Switzerland":{ "Junior": 187500, "Mid": 225000, "Senior": 250000, "Staff": 300000, "Principal": 368750 }
+      }
+    },
+    "Decentralized Data Engineer": {
+      "category": "Web3",
+      "countries": {
+        "Canada":   { "Junior": 127500, "Mid": 153000, "Senior": 170000, "Staff": 204000, "Principal": 250750 },
+        "Dubai":    { "Junior": 116875, "Mid": 140250, "Senior": 155625, "Staff": 186750, "Principal": 229625 },
+        "London":   { "Junior": 106250, "Mid": 127500, "Senior": 141667, "Staff": 170000, "Principal": 209167 },
+        "Germany":  { "Junior": 117500, "Mid": 141000, "Senior": 156667, "Staff": 188000, "Principal": 231167 },
+        "USA":      { "Junior": 127500, "Mid": 153000, "Senior": 170000, "Staff": 204000, "Principal": 250750 },
+        "Singapore":{"Junior": 127500, "Mid": 153000, "Senior": 170000, "Staff": 204000, "Principal": 250750 },
+        "China":    { "Junior": 127500, "Mid": 153000, "Senior": 170000, "Staff": 204000, "Principal": 250750 },
+        "Australia":{ "Junior": 127500, "Mid": 153000, "Senior": 170000, "Staff": 204000, "Principal": 250750 },
+        "Sweden":   { "Junior": 127500, "Mid": 153000, "Senior": 170000, "Staff": 204000, "Principal": 250750 },
+        "Netherlands":{ "Junior": 127500, "Mid": 153000, "Senior": 170000, "Staff": 204000, "Principal": 250750 },
+        "Switzerland":{ "Junior": 127500, "Mid": 153000, "Senior": 170000, "Staff": 204000, "Principal": 250750 }
+      }
+    },
+    "Decentralized Data Scientist": {
+      "category": "Web3",
+      "countries": {
+        "Canada":   { "Junior": 127500, "Mid": 153000, "Senior": 170000, "Staff": 204000, "Principal": 250750 },
+        "Dubai":    { "Junior": 116875, "Mid": 140250, "Senior": 155625, "Staff": 186750, "Principal": 229625 },
+        "London":   { "Junior": 106250, "Mid": 127500, "Senior": 141667, "Staff": 170000, "Principal": 209167 },
+        "Germany":  { "Junior": 117500, "Mid": 141000, "Senior": 156667, "Staff": 188000, "Principal": 231167 },
+        "USA":      { "Junior": 127500, "Mid": 153000, "Senior": 170000, "Staff": 204000, "Principal": 250750 },
+        "Singapore":{"Junior": 127500, "Mid": 153000, "Senior": 170000, "Staff": 204000, "Principal": 250750 },
+        "China":    { "Junior": 127500, "Mid": 153000, "Senior": 170000, "Staff": 204000, "Principal": 250750 },
+        "Australia":{ "Junior": 127500, "Mid": 153000, "Senior": 170000, "Staff": 204000, "Principal": 250750 },
+        "Sweden":   { "Junior": 127500, "Mid": 153000, "Senior": 170000, "Staff": 204000, "Principal": 250750 },
+        "Netherlands":{ "Junior": 127500, "Mid": 153000, "Senior": 170000, "Staff": 204000, "Principal": 250750 },
+        "Switzerland":{ "Junior": 127500, "Mid": 153000, "Senior": 170000, "Staff": 204000, "Principal": 250750 }
+      }
+    },
+    "iOS Developer": {
+      "category": "Mobile",
+      "countries": {
+        "Canada": { "Junior": 67500, "Mid": 81000, "Senior": 90000, "Staff": 108000, "Principal": 132750 },
+        "Dubai": { "Junior": 63750, "Mid": 76500, "Senior": 85000, "Staff": 102000, "Principal": 125375 },
+        "London": { "Junior": 56250, "Mid": 67500, "Senior": 75000, "Staff": 90000, "Principal": 110625 },
+        "Germany": { "Junior": 60000, "Mid": 72000, "Senior": 80000, "Staff": 96000, "Principal": 118000 },
+        "USA": { "Junior": 112500, "Mid": 135000, "Senior": 150000, "Staff": 180000, "Principal": 221250 },
+        "Singapore": { "Junior": 58500, "Mid": 70200, "Senior": 78000, "Staff": 93600, "Principal": 115050 },
+        "China": { "Junior": 48750, "Mid": 58500, "Senior": 65000, "Staff": 78000, "Principal": 95875 },
+        "Australia": { "Junior": 71250, "Mid": 85500, "Senior": 95000, "Staff": 114000, "Principal": 140125 },
+        "Sweden": { "Junior": 56250, "Mid": 67500, "Senior": 75000, "Staff": 90000, "Principal": 110625 },
+        "Netherlands": { "Junior": 63750, "Mid": 76500, "Senior": 85000, "Staff": 102000, "Principal": 125375 },
+        "Switzerland": { "Junior": 93750, "Mid": 112500, "Senior": 125000, "Staff": 150000, "Principal": 184375 }
+      }
+    },
+    "React Native Developer": {
+      "category": "Mobile",
+      "countries": {
+        "Canada": { "Junior": 63750, "Mid": 76500, "Senior": 85000, "Staff": 102000, "Principal": 125375 },
+        "Dubai": { "Junior": 60000, "Mid": 72000, "Senior": 80000, "Staff": 96000, "Principal": 118000 },
+        "London": { "Junior": 52500, "Mid": 63000, "Senior": 70000, "Staff": 84000, "Principal": 103250 },
+        "Germany": { "Junior": 56250, "Mid": 67500, "Senior": 75000, "Staff": 90000, "Principal": 110625 },
+        "USA": { "Junior": 105000, "Mid": 126000, "Senior": 140000, "Staff": 168000, "Principal": 206500 },
+        "Singapore": { "Junior": 54000, "Mid": 64800, "Senior": 72000, "Staff": 86400, "Principal": 106200 },
+        "China": { "Junior": 45000, "Mid": 54000, "Senior": 60000, "Staff": 72000, "Principal": 88500 },
+        "Australia": { "Junior": 67500, "Mid": 81000, "Senior": 90000, "Staff": 108000, "Principal": 132750 },
+        "Sweden": { "Junior": 52500, "Mid": 63000, "Senior": 70000, "Staff": 84000, "Principal": 103250 },
+        "Netherlands": { "Junior": 60000, "Mid": 72000, "Senior": 80000, "Staff": 96000, "Principal": 118000 },
+        "Switzerland": { "Junior": 90000, "Mid": 108000, "Senior": 120000, "Staff": 144000, "Principal": 177000 }
+      }
+    },
+    "Engineering Manager": {
+      "category": "Management",
+      "countries": {
+        "Canada": { "Junior": 105000, "Mid": 126000, "Senior": 140000, "Staff": 168000, "Principal": 206500 },
+        "Dubai": { "Junior": 97500, "Mid": 117000, "Senior": 130000, "Staff": 156000, "Principal": 191750 },
+        "London": { "Junior": 90000, "Mid": 108000, "Senior": 120000, "Staff": 144000, "Principal": 177000 },
+        "Germany": { "Junior": 93750, "Mid": 112500, "Senior": 125000, "Staff": 150000, "Principal": 184375 },
+        "USA": { "Junior": 176250, "Mid": 211500, "Senior": 235000, "Staff": 282000, "Principal": 346625 },
+        "Singapore": { "Junior": 82500, "Mid": 99000, "Senior": 110000, "Staff": 132000, "Principal": 162250 },
+        "China": { "Junior": 71250, "Mid": 85500, "Senior": 95000, "Staff": 114000, "Principal": 140125 },
+        "Australia": { "Junior": 101250, "Mid": 121500, "Senior": 135000, "Staff": 162000, "Principal": 199125 },
+        "Sweden": { "Junior": 86250, "Mid": 103500, "Senior": 115000, "Staff": 138000, "Principal": 169625 },
+        "Netherlands": { "Junior": 97500, "Mid": 117000, "Senior": 130000, "Staff": 156000, "Principal": 191750 },
+        "Switzerland": { "Junior": 135000, "Mid": 162000, "Senior": 180000, "Staff": 216000, "Principal": 265500 }
+      }
+    }
+  },
+  "categories": {
+    "Frontend": [ "Frontend TypeScript" ],
+    "Backend": [ "Golang Developer", "Java Developer", "Backend TypeScript", "Backend Python" ],
+    "Full-stack": [ "Full-stack Python", "Full-stack TypeScript" ],
+    "AI/ML": [ "Machine Learning", "ML Ops" ],
+    "Data": [ "Data Engineer", "Data Analyst", "Data Scientist" ],
+    "Cloud": [ "Cloud Specialist", "Multi-cloud Specialist" ],
+    "Security": [ "Cybersecurity Specialist" ],
+    "DevOps": [ "SRE", "Infrastructure as Code" ],
+    "Web3": [ "Rust Developer", "Solidity Developer", "Blockchain Developer", "AI Web3 Developer", "Decentralized Data Engineer", "Decentralized Data Scientist" ],
+    "Mobile": [ "iOS Developer", "React Native Developer" ],
+    "Management": [ "Engineering Manager" ]
+  },
+  "countryMapping": {
+    "United States": "USA",
+    "United States of America": "USA",
+    "United Kingdom": "London",
+    "UAE": "Dubai",
+    "United Arab Emirates": "Dubai",
+    "UK": "London",
+    "Great Britain": "London",
+    "England": "London"
+  }
+}
