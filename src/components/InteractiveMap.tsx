@@ -4,6 +4,7 @@ import type { GeoJSONData, GeoJSONFeature } from "@/types/mapTypes";
 import type { Layer, PathOptions } from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "../styles/map.css";
+import { useI18n } from "../contexts/I18n";
 
 interface InteractiveMapProps {
 	selectedCountry?: string;
@@ -11,7 +12,7 @@ interface InteractiveMapProps {
 	countryData?: { country: string; multiplier: number; color: string }[];
 }
 
-type GroupKey = "United States" | "Brazil" | "Europe" | "Asia";
+type GroupKey = "United States" | "Europe" | "Asia";
 
 type PropertiesRecord = Record<string, unknown>;
 
@@ -44,17 +45,18 @@ export function InteractiveMap({
 	selectedCountry,
 	onCountrySelect,
 }: InteractiveMapProps) {
+	const { t, language } = useI18n();
 	const [interactiveData, setInteractiveData] = useState<GeoJSONData | null>(null);
 	const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
 		const loadGeoData = async () => {
 			try {
+				setLoading(true);
 				const regions = [
-					{ key: 'Brazil' as GroupKey, file: 'Brazil.geojson', label: 'Brasil' },
-					{ key: 'United States' as GroupKey, file: 'USA.geojson', label: 'Estados Unidos' },
-					{ key: 'Europe' as GroupKey, file: 'EU-simplified.geojson', label: 'Europa' },
-					{ key: 'Asia' as GroupKey, file: 'AS-simplified.geojson', label: 'Ásia' }
+					{ key: 'United States' as GroupKey, file: 'USA.geojson', label: t.mapUnitedStates },
+					{ key: 'Europe' as GroupKey, file: 'EU-simplified.geojson', label: t.mapEurope },
+					{ key: 'Asia' as GroupKey, file: 'AS-simplified.geojson', label: t.mapAsia }
 				];
 
 				const loadPromises = regions.map(async (region) => {
@@ -103,7 +105,7 @@ export function InteractiveMap({
 		};
 
 		loadGeoData();
-	}, []);
+	}, [t.mapUnitedStates, t.mapEurope, t.mapAsia]);
 
 	const selectedGroup = useMemo(() => selectedCountry as GroupKey | undefined, [selectedCountry]);
 
@@ -118,10 +120,9 @@ export function InteractiveMap({
 	const onEachInteractiveFeature = (feature: GeoJSONFeature, layer: Layer) => {
 		const group = getCustomProp<GroupKey>(feature, "__group");
 		const labelByGroup: Record<GroupKey, string> = {
-			"United States": "Estados Unidos",
-			Brazil: "Brasil",
-			Europe: "Europa",
-			Asia: "Ásia",
+			"United States": t.mapUnitedStates,
+			Europe: t.mapEurope,
+			Asia: t.mapAsia,
 		};
 		
 		const label = group ? labelByGroup[group] : getNameFromFeature(feature);
@@ -178,7 +179,7 @@ export function InteractiveMap({
 		return (
 			<div className="map-wrapper">
 				<div className="flex items-center justify-center h-full">
-					<p>Carregando mapa...</p>
+					<p>{t.loadingMap}</p>
 				</div>
 			</div>
 		);
@@ -186,7 +187,12 @@ export function InteractiveMap({
 
 	return (
 		<div className="map-wrapper-simple">
-			<MapContainer center={[20, 0]} zoom={2} className="leaflet-map-simple">
+			<MapContainer 
+				key={`map-${language}`}
+				center={[20, 0]} 
+				zoom={2} 
+				className="leaflet-map-simple"
+			>
 				<TileLayer
 					url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
 					attribution="© OpenStreetMap contributors"
