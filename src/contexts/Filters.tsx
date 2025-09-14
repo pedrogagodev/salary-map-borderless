@@ -1,5 +1,4 @@
-// contexts/filters.tsx
-import { createContext, useContext, useMemo, useReducer } from "react";
+import { createContext, useContext, useMemo, useReducer, useState, useEffect } from "react";
 import type { Category, RoleName } from "@/types/salaryTypes";
 
 type ComparisonType = "stacks" | "areas";
@@ -77,6 +76,11 @@ const FiltersContext = createContext<FiltersContextValue | null>(null);
 
 export function FiltersProvider({ children }: { children: React.ReactNode }) {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const [isHydrated, setIsHydrated] = useState(false);
+
+  useEffect(() => {
+    setIsHydrated(true);
+  }, []);
 
   const value = useMemo<FiltersContextValue>(() => ({
     state,
@@ -92,6 +96,10 @@ export function FiltersProvider({ children }: { children: React.ReactNode }) {
     openSidebar: () => dispatch({ type: "openSidebar" }),
     closeSidebar: () => dispatch({ type: "closeSidebar" }),
   }), [state]);
+
+  if (!isHydrated) {
+    return null;
+  }
 
   return <FiltersContext.Provider value={value}>{children}</FiltersContext.Provider>;
 }
