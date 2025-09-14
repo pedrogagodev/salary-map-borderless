@@ -20,6 +20,7 @@ import {
 	Shield,
 } from "lucide-react";
 import { useFilters } from "../contexts/Filters";
+import { useI18n } from "../contexts/I18n";
 
 const categoryIcons: Record<Category, React.ComponentType<{ className?: string }>> = {
 	'Frontend': Code,
@@ -46,6 +47,7 @@ export default function FilterSidebar({
 	hideTitle = false,
 }: FilterSidebarProps) {
 	const { state, setCategory, setRole, setExperience, setHasInternational } = useFilters();
+	const { t } = useI18n();
 	const { selectedCategory, selectedRole, experience, hasInternational } = state;
 	
 	const categories = getCategories(newSalaryData);
@@ -62,12 +64,12 @@ export default function FilterSidebar({
 			{!hideTitle && (
 				<div className="flex items-center gap-2 mb-4">
 					<Code className="w-5 h-5 text-primary" />
-					<h2 className="text-lg font-semibold">Filtros</h2>
+					<h2 className="text-lg font-semibold">{t.filters}</h2>
 				</div>
 			)}
 			<div className="space-y-4">
 				<div className="space-y-2">
-					<p className="text-sm font-medium">Categoria</p>
+					<p className="text-sm font-medium">{t.category}</p>
 					<div className="grid grid-cols-1 gap-1.5 mt-2">
 						{categories.map((category) => {
 							const IconComponent = categoryIcons[category];
@@ -92,10 +94,10 @@ export default function FilterSidebar({
 				</div>
 
 				<div className="space-y-2">
-					<p className="text-sm font-medium">Stack Específica</p>
+					<p className="text-sm font-medium">{t.specificStack}</p>
 					<Select value={selectedRole || ""} onValueChange={(value) => setRole(value as RoleName)}>
 						<SelectTrigger className="bg-background border-primary/50 hover:border-primary focus:ring-2 focus:ring-primary/60 text-foreground">
-							<SelectValue placeholder="Selecione uma stack" />
+							<SelectValue placeholder={t.selectStack} />
 						</SelectTrigger>
 						<SelectContent className="bg-card text-foreground border border-primary/30 shadow-lg">
 							{availableRoles.map((role) => (
@@ -110,7 +112,7 @@ export default function FilterSidebar({
 
 				<div className="space-y-2">
 					<p className="text-sm font-medium">
-						Experiência: {experience[0]} anos
+						{t.experience}: {experience[0]} {t.years}
 					</p>
 					<Slider
 						value={experience}
@@ -127,7 +129,7 @@ export default function FilterSidebar({
 				</div>
 
 				<div className="flex items-center justify-between">
-					<p className="text-sm font-medium">Experiência Internacional</p>
+					<p className="text-sm font-medium">{t.internationalExperience}</p>
 					<Switch
 						size="lg"
 						checked={hasInternational}

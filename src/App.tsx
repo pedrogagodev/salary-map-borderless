@@ -6,6 +6,8 @@ import { getSalaryData } from "./services/salaryDataService";
 import { getSalary, getSalaryByContinent, getRolesByCategory, mapCountryNameToCode } from "./utils/salaryDataUtils";
 import type { Category, ExperienceLevel, CountryCode, Continent } from "./types/salaryTypes";
 import { useFilters } from "./contexts/Filters";
+import { useI18n } from "./contexts/I18n";
+import { LanguageSwitcher } from "./components/LanguageSwitcher";
 
 import {
 	SalaryOverviewCards,
@@ -25,6 +27,7 @@ const countryData = [
 
 export default function SalaryAnalyzer() {
 	const { state, setRole, openSidebar, closeSidebar, toggleComparisonType, setSelectedCountry } = useFilters();
+	const { t } = useI18n();
 	const { 
 		selectedCategory, 
 		selectedRole, 
@@ -246,10 +249,11 @@ export default function SalaryAnalyzer() {
 								className="h-8 w-8"
 							/>
 							<h1 className="text-xl font-bold text-foreground">
-								Borderless Coding Salary Comparison
+								{t.title}
 							</h1>
 						</div>
 						<div className="flex items-center gap-3">
+							<LanguageSwitcher />
 							<Button
 								variant="outline"
 								size="sm"
@@ -257,7 +261,7 @@ export default function SalaryAnalyzer() {
 								className="lg:hidden flex items-center gap-2"
 							>
 								<Filter className="w-4 h-4" />
-								Filtros
+								{t.openFilters}
 							</Button>
 						</div>
 					</div>
@@ -275,7 +279,7 @@ export default function SalaryAnalyzer() {
 								closeSidebar();
 							}
 						}}
-						aria-label="Fechar menu de filtros"
+						aria-label={t.closeMenu}
 					/>
 				)}
 
@@ -293,7 +297,7 @@ export default function SalaryAnalyzer() {
 					}`}
 				>
 					<div className="flex items-center justify-between p-4 border-b border-border">
-						<h2 className="text-lg font-semibold">Filtros</h2>
+						<h2 className="text-lg font-semibold">{t.filters}</h2>
 						<Button
 							variant="ghost"
 							size="sm"
@@ -331,7 +335,7 @@ export default function SalaryAnalyzer() {
 
 							<SalaryComparisonChart
 								chartData={chartData}
-								selectedCountry={selectedCountry}
+								selectedCountry={selectedCountry || t.selectedCountry}
 								hasInternational={hasInternational}
 								onToggleComparisonType={toggleComparisonType}
 								comparisonType={comparisonType}

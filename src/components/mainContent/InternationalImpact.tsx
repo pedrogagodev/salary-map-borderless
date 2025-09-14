@@ -1,5 +1,6 @@
 import { MapPin } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import { useI18n } from "../../contexts/I18n";
 
 export function InternationalImpact({
 	hasInternational,
@@ -8,6 +9,7 @@ export function InternationalImpact({
 	hasInternational: boolean;
 	calculatedSalary: { min: number; avg: number; max: number };
 }) {
+	const { t } = useI18n();
 	return (
 		<>
 			{hasInternational && (
@@ -15,14 +17,14 @@ export function InternationalImpact({
 					<CardHeader>
 						<CardTitle className="flex items-center gap-2 text-foreground">
 							<MapPin className="w-5 h-5 text-secondary" />
-							Impacto da Experiência Internacional
+							{t.internationalExperienceImpact}
 						</CardTitle>
 					</CardHeader>
 					<CardContent>
 						<div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
 							<div className="text-center p-4 rounded-lg bg-card border border-border">
 								<p className="text-sm text-muted-foreground">
-									Sem Experiência Internacional
+									{t.withoutInternationalExperience}
 								</p>
 								<p className="text-lg sm:text-xl font-bold text-foreground">
 									$ {Math.round(calculatedSalary.avg / 1.2).toLocaleString()}
@@ -30,13 +32,13 @@ export function InternationalImpact({
 							</div>
 							<div className="text-center p-4 rounded-lg bg-secondary/10 border border-secondary/20">
 								<p className="text-sm text-muted-foreground">
-									Com Experiência Internacional
+									{t.withInternationalExperience}
 								</p>
 								<p className="text-lg sm:text-xl font-bold text-foreground">
 									$ {calculatedSalary.avg.toLocaleString()}
 								</p>
 								<p className="text-sm text-secondary mt-1 font-medium">
-									+20% de aumento
+									{t.increasePercentage}
 								</p>
 							</div>
 						</div>
