@@ -127,7 +127,16 @@ export default function SalaryAnalyzer() {
 		const countryCode = mapCountryNameToCode(selectedCountry, newSalaryData);
 		const experienceLevel = getExperienceLevel(experience[0]);
 		
-		if (!countryCode) return [];
+		const continentMapping: Record<string, Continent> = {
+			"Europa": "Europe",
+			"Ásia": "Asia",
+			"Europe": "Europe",
+			"Asia": "Asia",
+		};
+		
+		const continent = continentMapping[selectedCountry];
+		
+		if (!countryCode && !continent) return [];
 		
 		const intlMultiplier = 1.2;
 		
@@ -135,7 +144,14 @@ export default function SalaryAnalyzer() {
 			const availableRoles = getRolesByCategory(newSalaryData, selectedCategory);
 			
 			return availableRoles.map(role => {
-				const nationalSalary = getSalary(newSalaryData, role, countryCode, experienceLevel) || 0;
+				let nationalSalary = 0;
+				
+				if (countryCode) {
+					nationalSalary = getSalary(newSalaryData, role, countryCode, experienceLevel) || 0;
+				} else if (continent) {
+					nationalSalary = getSalaryByContinent(newSalaryData, role, continent, experienceLevel) || 0;
+				}
+				
 				const usaSalary = getSalary(newSalaryData, role, "USA", experienceLevel) || 0;
 				
 				return {
@@ -153,9 +169,17 @@ export default function SalaryAnalyzer() {
 					const categoryRoles = getRolesByCategory(newSalaryData, category);
 					if (categoryRoles.length === 0) return null;
 					
-					const nationalSalaries = categoryRoles
-						.map(role => getSalary(newSalaryData, role, countryCode, experienceLevel) || 0)
-						.filter(salary => salary > 0);
+					let nationalSalaries: number[] = [];
+					
+					if (countryCode) {
+						nationalSalaries = categoryRoles
+							.map(role => getSalary(newSalaryData, role, countryCode, experienceLevel) || 0)
+							.filter(salary => salary > 0);
+					} else if (continent) {
+						nationalSalaries = categoryRoles
+							.map(role => getSalaryByContinent(newSalaryData, role, continent, experienceLevel) || 0)
+							.filter(salary => salary > 0);
+					}
 					
 					const usaSalaries = categoryRoles
 						.map(role => getSalary(newSalaryData, role, "USA", experienceLevel) || 0)
