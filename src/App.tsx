@@ -1,10 +1,11 @@
-import { useState, useMemo, useEffect, useCallback } from "react";
+import { useMemo, useEffect, useCallback } from "react";
 import { Filter, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import FilterSidebar from "./components/FilterSidebar";
 import { getSalaryData } from "./services/salaryDataService";
 import { getSalary, getSalaryByContinent, getRolesByCategory, mapCountryNameToCode } from "./utils/salaryDataUtils";
-import type { Category, RoleName, ExperienceLevel, CountryCode, Continent } from "./types/salaryTypes";
+import type { Category, ExperienceLevel, CountryCode, Continent } from "./types/salaryTypes";
+import { useFilters } from "./contexts/Filters";
 
 import {
 	SalaryOverviewCards,
@@ -23,13 +24,16 @@ const countryData = [
 
 
 export default function SalaryAnalyzer() {
-	const [selectedCategory, setSelectedCategory] = useState<Category>("Backend");
-	const [selectedRole, setSelectedRole] = useState<RoleName | null>(null);
-	const [experience, setExperience] = useState([3]);
-	const [hasInternational, setHasInternational] = useState(false);
-	const [selectedCountry, setSelectedCountry] = useState("United States");
-	const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
-	const [comparisonType, setComparisonType] = useState<'stacks' | 'areas'>('stacks');
+	const { state, setRole, openSidebar, closeSidebar, toggleComparisonType, setSelectedCountry } = useFilters();
+	const { 
+		selectedCategory, 
+		selectedRole, 
+		experience, 
+		hasInternational, 
+		selectedCountry, 
+		isMobileSidebarOpen, 
+		comparisonType 
+	} = state;
 	
 	const newSalaryData = getSalaryData();
 	
@@ -46,10 +50,10 @@ export default function SalaryAnalyzer() {
 		if (selectedCategory && !selectedRole) {
 			const availableRoles = getRolesByCategory(newSalaryData, selectedCategory);
 			if (availableRoles.length > 0) {
-				setSelectedRole(availableRoles[0]);
+				setRole(availableRoles[0]);
 			}
 		}
-	}, [selectedCategory, selectedRole, newSalaryData]);
+	}, [selectedCategory, selectedRole, newSalaryData, setRole]);
 
 	useEffect(() => {
 		if (isMobileSidebarOpen) {
@@ -249,7 +253,7 @@ export default function SalaryAnalyzer() {
 							<Button
 								variant="outline"
 								size="sm"
-								onClick={() => setIsMobileSidebarOpen(true)}
+								onClick={openSidebar}
 								className="lg:hidden flex items-center gap-2"
 							>
 								<Filter className="w-4 h-4" />
@@ -265,10 +269,10 @@ export default function SalaryAnalyzer() {
 					<button
 						type="button"
 						className="fixed inset-0 bg-black/50 z-[1000] lg:hidden border-0 p-0 cursor-pointer"
-						onClick={() => setIsMobileSidebarOpen(false)}
+						onClick={closeSidebar}
 						onKeyDown={(e) => {
 							if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') {
-								setIsMobileSidebarOpen(false);
+								closeSidebar();
 							}
 						}}
 						aria-label="Fechar menu de filtros"
@@ -278,14 +282,6 @@ export default function SalaryAnalyzer() {
 				<div className="hidden lg:block w-96 bg-background fixed left-0 top-16 h-[calc(100dvh-4rem)] overflow-y-auto">
 					<div className="p-4 pt-6">
 						<FilterSidebar
-							selectedCategory={selectedCategory}
-							setSelectedCategory={setSelectedCategory}
-							selectedRole={selectedRole}
-							setSelectedRole={setSelectedRole}
-							experience={experience}
-							setExperience={setExperience}
-							hasInternational={hasInternational}
-							setHasInternational={setHasInternational}
 							newSalaryData={newSalaryData}
 						/>
 					</div>
@@ -301,7 +297,7 @@ export default function SalaryAnalyzer() {
 						<Button
 							variant="ghost"
 							size="sm"
-							onClick={() => setIsMobileSidebarOpen(false)}
+							onClick={closeSidebar}
 							className="h-8 w-8 p-0"
 						>
 							<X className="h-4 w-4" />
@@ -309,14 +305,6 @@ export default function SalaryAnalyzer() {
 					</div>
 					<div className="p-4 overflow-y-auto h-[calc(100dvh-4rem)] pb-[env(safe-area-inset-bottom)]">
 						<FilterSidebar
-							selectedCategory={selectedCategory}
-							setSelectedCategory={setSelectedCategory}
-							selectedRole={selectedRole}
-							setSelectedRole={setSelectedRole}
-							experience={experience}
-							setExperience={setExperience}
-							hasInternational={hasInternational}
-							setHasInternational={setHasInternational}
 							newSalaryData={newSalaryData}
 							hideTitle={true}
 						/>
@@ -345,7 +333,7 @@ export default function SalaryAnalyzer() {
 								chartData={chartData}
 								selectedCountry={selectedCountry}
 								hasInternational={hasInternational}
-								onToggleComparisonType={() => setComparisonType(prev => prev === 'stacks' ? 'areas' : 'stacks')}
+								onToggleComparisonType={toggleComparisonType}
 								comparisonType={comparisonType}
 							/>
 

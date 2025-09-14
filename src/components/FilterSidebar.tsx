@@ -19,6 +19,7 @@ import {
 	Database,
 	Shield,
 } from "lucide-react";
+import { useFilters } from "../contexts/Filters";
 
 const categoryIcons: Record<Category, React.ComponentType<{ className?: string }>> = {
 	'Frontend': Code,
@@ -36,39 +37,25 @@ const categoryIcons: Record<Category, React.ComponentType<{ className?: string }
 
 
 interface FilterSidebarProps {
-	selectedCategory: Category;
-	setSelectedCategory: (category: Category) => void;
-	selectedRole: RoleName | null;
-	setSelectedRole: (role: RoleName | null) => void;
-	experience: number[];
-	setExperience: (experience: number[]) => void;
-	hasInternational: boolean;
-	setHasInternational: (hasInternational: boolean) => void;
 	newSalaryData: SalaryData;
 	hideTitle?: boolean;
 }
 
 export default function FilterSidebar({
-	selectedCategory,
-	setSelectedCategory,
-	selectedRole,
-	setSelectedRole,
-	experience,
-	setExperience,
-	hasInternational,
-	setHasInternational,
 	newSalaryData,
 	hideTitle = false,
 }: FilterSidebarProps) {
+	const { state, setCategory, setRole, setExperience, setHasInternational } = useFilters();
+	const { selectedCategory, selectedRole, experience, hasInternational } = state;
 	
 	const categories = getCategories(newSalaryData);
 	const availableRoles = getRolesByCategory(newSalaryData, selectedCategory);
 	
 	useEffect(() => {
 		if (selectedRole && !availableRoles.includes(selectedRole)) {
-			setSelectedRole(null);
+			setRole(null);
 		}
-	}, [selectedRole, availableRoles, setSelectedRole]);
+	}, [selectedRole, availableRoles, setRole]);
 
 	return (
 		<div className="space-y-4 bg-card/50 border border-border rounded-lg p-3">
@@ -89,7 +76,7 @@ export default function FilterSidebar({
 								<button
 									key={category}
 									type="button"
-									onClick={() => setSelectedCategory(category)}
+									onClick={() => setCategory(category)}
 									className={`flex items-center gap-2.5 p-2.5 rounded-lg border transition-all text-left ${
 										isSelected
 											? "border-primary bg-primary text-white font-medium"
@@ -106,7 +93,7 @@ export default function FilterSidebar({
 
 				<div className="space-y-2">
 					<p className="text-sm font-medium">Stack Específica</p>
-					<Select value={selectedRole || ""} onValueChange={(value) => setSelectedRole(value as RoleName)}>
+					<Select value={selectedRole || ""} onValueChange={(value) => setRole(value as RoleName)}>
 						<SelectTrigger className="bg-background border-primary/50 hover:border-primary focus:ring-2 focus:ring-primary/60 text-foreground">
 							<SelectValue placeholder="Selecione uma stack" />
 						</SelectTrigger>
