@@ -159,41 +159,6 @@ export default function SalaryAnalyzer() {
 		}
 	}, [selectedCountry, selectedCategory, newSalaryData, experience, comparisonType, getExperienceLevel]);
 
-	const countryChartData = useMemo(() => {
-		const availableRoles = getRolesByCategory(newSalaryData, selectedCategory);
-		const defaultRole = availableRoles[0];
-		const experienceLevel = getExperienceLevel(experience[0]);
-		
-		if (!defaultRole) return [];
-		
-		const baseCountries = countryData.map((country) => {
-			const countryCode = mapCountryNameToCode(country.country, newSalaryData);
-			const salary = countryCode ? getSalary(newSalaryData, defaultRole, countryCode, experienceLevel) : 0;
-			
-			return {
-				country: country.country,
-				salary: salary || 0,
-			};
-		});
-
-		const selectedCountryName = selectedCountry;
-		const isSelectedCountryInList = baseCountries.some(
-			(item) => item.country.toLowerCase() === selectedCountryName.toLowerCase()
-		);
-
-		if (!isSelectedCountryInList) {
-			const countryCode = mapCountryNameToCode(selectedCountryName, newSalaryData);
-			if (countryCode && defaultRole) {
-				const salary = getSalary(newSalaryData, defaultRole, countryCode, experienceLevel);
-				baseCountries.push({
-					country: selectedCountryName,
-					salary: salary || 0,
-				});
-			}
-		}
-
-		return baseCountries;
-	}, [selectedCountry, selectedCategory, newSalaryData, experience, getExperienceLevel]);
 
 	return (
 		<div className="min-h-screen bg-background text-foreground">
@@ -301,7 +266,8 @@ export default function SalaryAnalyzer() {
 
 							<RegionalComparison
 								selectedArea={selectedCategory}
-								regionChartData={countryChartData}
+								selectedRole={selectedRole}
+								experience={experience}
 							/>
 						</div>
 					</div>

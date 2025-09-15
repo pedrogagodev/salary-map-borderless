@@ -9,6 +9,9 @@ import { Tooltip } from "recharts";
 import { AnimatedContainer } from "../ui/animated-container";
 import { useI18n } from "../../contexts/I18n";
 import { getCountryTranslationKey } from "../../utils/countryMapping";
+import { getSalaryData } from "../../services/salaryDataService";
+import { getSalary, mapCountryNameToCode } from "../../utils/salaryDataUtils";
+import type { ExperienceLevel, RoleName } from "../../types/salaryTypes";
 
 interface RegionData {
 	country: string;
@@ -17,7 +20,8 @@ interface RegionData {
 
 interface RegionalComparisonProps {
 	selectedArea: string;
-	regionChartData: RegionData[];
+	selectedRole: RoleName | null;
+	experience: number[];
 }
 
 interface RegionalTooltipPayload {
@@ -58,9 +62,48 @@ const CustomRegionalTooltip = ({ active, payload, label, salaryLabel }: CustomRe
 
 export function RegionalComparison({
 	selectedArea,
-	regionChartData,
+	selectedRole,
+	experience,
 }: RegionalComparisonProps) {
 	const { t } = useI18n();
+	const salaryData = getSalaryData();
+	
+	const getExperienceLevel = (years: number): ExperienceLevel => {
+		if (years <= 2) return "Junior";
+		if (years <= 5) return "Mid";
+		if (years <= 7) return "Senior";
+		if (years <= 12) return "Staff";
+		return "Principal";
+	};
+	
+	const getAllCountriesData = (): RegionData[] => {
+		if (!selectedRole) return [];
+		
+		const experienceLevel = getExperienceLevel(experience[0]);
+		const countries: RegionData[] = [];
+		
+		const allCountries = new Set<string>();
+		Object.values(salaryData.roles).forEach(role => {
+			Object.keys(role.countries).forEach(country => {
+				allCountries.add(country);
+			});
+		});
+		
+		Array.from(allCountries).forEach(country => {
+			const countryCode = mapCountryNameToCode(country, salaryData);
+			if (countryCode) {
+				const salary = getSalary(salaryData, selectedRole as RoleName, countryCode, experienceLevel);
+				if (salary !== null) {
+					countries.push({
+						country,
+						salary
+					});
+				}
+			}
+		});
+		
+		return countries.sort((a, b) => b.salary - a.salary);
+	};
 	
 	const getTranslatedCountryName = (countryName: string): string => {
 		const translationKey = getCountryTranslationKey(countryName);
@@ -70,6 +113,7 @@ export function RegionalComparison({
 		return countryName;
 	};
 	
+	const regionChartData = getAllCountriesData();
 	const translatedRegionData = regionChartData.map(item => ({
 		...item,
 		country: getTranslatedCountryName(item.country)
@@ -97,9 +141,9 @@ export function RegionalComparison({
 									<XAxis
 										dataKey="country"
 										stroke="#ffffff"
-										tick={{ fill: "#ffffff", fontSize: 13 }}
 										axisLine={{ stroke: "#ffffff" }}
 										tickLine={{ stroke: "#ffffff" }}
+										tick={{ fill: "#ffffff", fontSize: 13, className: "hidden sm:block" }}
 									/>
 									<YAxis
 										stroke="#ffffff"
