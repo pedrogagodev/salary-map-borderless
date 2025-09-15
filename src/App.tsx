@@ -3,8 +3,8 @@ import { Filter, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import FilterSidebar from "./components/FilterSidebar";
 import { getSalaryData } from "./services/salaryDataService";
-import { getSalary, getSalaryByContinent, getRolesByCategory, mapCountryNameToCode } from "./utils/salaryDataUtils";
-import type { Category, ExperienceLevel, CountryCode, Continent } from "./types/salaryTypes";
+import { getSalary, getRolesByCategory, mapCountryNameToCode } from "./utils/salaryDataUtils";
+import type { Category, ExperienceLevel } from "./types/salaryTypes";
 import { useFilters } from "./contexts/Filters";
 import { useI18n } from "./contexts/I18n";
 import { LanguageSwitcher } from "./components/LanguageSwitcher";
@@ -19,9 +19,9 @@ import {
 
 
 const countryData = [
-	{ country: "EUA", multiplier: 3.5, color: "#4814b0" },
-	{ country: "Europa", multiplier: 2.8, color: "#f59e0b" },
-	{ country: "Ásia", multiplier: 2.2, color: "#dc2626" },
+	{ country: "USA", multiplier: 3.5, color: "#4814b0" },
+	{ country: "Germany", multiplier: 2.8, color: "#f59e0b" },
+	{ country: "Singapore", multiplier: 2.2, color: "#dc2626" },
 ];
 
 
@@ -90,30 +90,6 @@ export default function SalaryAnalyzer() {
 					};
 				}
 			}
-			
-			const continentMapping: Record<string, Continent> = {
-				"Europa": "Europe",
-				"Ásia": "Asia",
-				"Europe": "Europe",
-				"Asia": "Asia",
-			};
-			
-			const continent = continentMapping[selectedCountry];
-			
-			if (continent) {
-				const salary = getSalaryByContinent(newSalaryData, selectedRole, continent, experienceLevel);
-				
-				if (salary !== null) {
-					const intlMultiplier = hasInternational ? 1.2 : 1.0;
-					const adjustedSalary = Math.round(salary * intlMultiplier);
-					
-					return {
-						min: Math.round(adjustedSalary * 0.8),
-						avg: adjustedSalary,
-						max: Math.round(adjustedSalary * 1.2),
-					};
-				}
-			}
 		}
 		
 		return {
@@ -127,16 +103,7 @@ export default function SalaryAnalyzer() {
 		const countryCode = mapCountryNameToCode(selectedCountry, newSalaryData);
 		const experienceLevel = getExperienceLevel(experience[0]);
 		
-		const continentMapping: Record<string, Continent> = {
-			"Europa": "Europe",
-			"Ásia": "Asia",
-			"Europe": "Europe",
-			"Asia": "Asia",
-		};
-		
-		const continent = continentMapping[selectedCountry];
-		
-		if (!countryCode && !continent) return [];
+		if (!countryCode) return [];
 		
 		const intlMultiplier = 1.2;
 		
@@ -144,13 +111,7 @@ export default function SalaryAnalyzer() {
 			const availableRoles = getRolesByCategory(newSalaryData, selectedCategory);
 			
 			return availableRoles.map(role => {
-				let nationalSalary = 0;
-				
-				if (countryCode) {
-					nationalSalary = getSalary(newSalaryData, role, countryCode, experienceLevel) || 0;
-				} else if (continent) {
-					nationalSalary = getSalaryByContinent(newSalaryData, role, continent, experienceLevel) || 0;
-				}
+				const nationalSalary = getSalary(newSalaryData, role, countryCode, experienceLevel) || 0;
 				
 				const usaSalary = getSalary(newSalaryData, role, "USA", experienceLevel) || 0;
 				
@@ -171,15 +132,9 @@ export default function SalaryAnalyzer() {
 					
 					let nationalSalaries: number[] = [];
 					
-					if (countryCode) {
-						nationalSalaries = categoryRoles
-							.map(role => getSalary(newSalaryData, role, countryCode, experienceLevel) || 0)
-							.filter(salary => salary > 0);
-					} else if (continent) {
-						nationalSalaries = categoryRoles
-							.map(role => getSalaryByContinent(newSalaryData, role, continent, experienceLevel) || 0)
-							.filter(salary => salary > 0);
-					}
+					nationalSalaries = categoryRoles
+						.map(role => getSalary(newSalaryData, role, countryCode, experienceLevel) || 0)
+						.filter(salary => salary > 0);
 					
 					const usaSalaries = categoryRoles
 						.map(role => getSalary(newSalaryData, role, "USA", experienceLevel) || 0)
@@ -212,26 +167,7 @@ export default function SalaryAnalyzer() {
 		if (!defaultRole) return [];
 		
 		const baseCountries = countryData.map((country) => {
-			let countryCode: CountryCode | null = null;
-			
-			if (country.country === "EUA") {
-				countryCode = "USA";
-			} else if (country.country === "Europa") {
-				const salary = getSalaryByContinent(newSalaryData, defaultRole, "Europe", experienceLevel);
-				return {
-					country: country.country,
-					salary: salary || 0,
-				};
-			} else if (country.country === "Ásia") {
-				const salary = getSalaryByContinent(newSalaryData, defaultRole, "Asia", experienceLevel);
-				return {
-					country: country.country,
-					salary: salary || 0,
-				};
-			} else {
-				countryCode = mapCountryNameToCode(country.country, newSalaryData);
-			}
-			
+			const countryCode = mapCountryNameToCode(country.country, newSalaryData);
 			const salary = countryCode ? getSalary(newSalaryData, defaultRole, countryCode, experienceLevel) : 0;
 			
 			return {
@@ -242,9 +178,7 @@ export default function SalaryAnalyzer() {
 
 		const selectedCountryName = selectedCountry;
 		const isSelectedCountryInList = baseCountries.some(
-			(item) =>
-				item.country.toLowerCase() === selectedCountryName.toLowerCase() ||
-				(selectedCountryName === "United States" && item.country === "EUA"),
+			(item) => item.country.toLowerCase() === selectedCountryName.toLowerCase()
 		);
 
 		if (!isSelectedCountryInList) {

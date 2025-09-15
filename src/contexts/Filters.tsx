@@ -28,7 +28,7 @@ const initialState: FiltersState = {
   selectedRole: null,
   experience: [3],
   hasInternational: false,
-  selectedCountry: "United States",
+  selectedCountry: "USA",
   comparisonType: "stacks",
   isMobileSidebarOpen: false,
 };

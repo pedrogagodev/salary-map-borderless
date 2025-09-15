@@ -5,14 +5,17 @@ import type { Layer, PathOptions } from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "../styles/map.css";
 import { useI18n } from "../contexts/I18n";
+import { 
+  hasCountrySalaryData, 
+  geoJSONCountryToSalary,
+  getCountryTranslationKey
+} from "../utils/countryMapping";
 
 interface InteractiveMapProps {
 	selectedCountry?: string;
 	onCountrySelect?: (country: string) => void;
 	countryData?: { country: string; multiplier: number; color: string }[];
 }
-
-type GroupKey = "United States" | "Europe" | "Asia";
 
 type PropertiesRecord = Record<string, unknown>;
 
@@ -25,21 +28,6 @@ const getNameFromFeature = (f: GeoJSONFeature): string => {
 	);
 };
 
-const getCustomProp = <T,>(f: GeoJSONFeature, key: string): T | undefined => {
-	const props = (f.properties || {}) as PropertiesRecord;
-	return props[key] as T | undefined;
-};
-
-const isGeoJSONFeature = (data: unknown): data is GeoJSONFeature => {
-	return (
-		typeof data === 'object' &&
-		data !== null &&
-		'type' in data &&
-		(data as { type: unknown }).type === 'Feature' &&
-		'geometry' in data &&
-		'properties' in data
-	);
-};
 
 export function InteractiveMap({
 	selectedCountry,
@@ -53,79 +41,53 @@ export function InteractiveMap({
 		const loadGeoData = async () => {
 			try {
 				setLoading(true);
-				const regions = [
-					{ key: 'United States' as GroupKey, file: 'USA.geojson', label: t.mapUnitedStates },
-					{ key: 'Europe' as GroupKey, file: 'EU-simplified.geojson', label: t.mapEurope },
-					{ key: 'Asia' as GroupKey, file: 'AS-simplified.geojson', label: t.mapAsia }
-				];
+				
+				const assetUrl = new URL('../data/GeoJSON-MAP.geojson', import.meta.url).href;
+				const response = await fetch(assetUrl);
+				const worldData = await response.json() as GeoJSONData;
 
-				const loadPromises = regions.map(async (region) => {
-					const assetUrl = new URL(`../data/continents/${region.file}`, import.meta.url).href;
-					const response = await fetch(assetUrl);
-					const data = await response.json();
-					return {
-						...region,
-						data: data as GeoJSONData,
-					};
+				const filteredFeatures = worldData.features.filter((feature) => {
+					const countryName = getNameFromFeature(feature);
+					return hasCountrySalaryData(countryName);
 				});
 
-				const loadedRegions = await Promise.all(loadPromises);
-
-				const allFeatures: GeoJSONFeature[] = [];
-				loadedRegions.forEach(region => {
-					let features: GeoJSONFeature[] = [];
-					if (region.data?.features) {
-						features = region.data.features;
-					} else if (Array.isArray(region.data)) {
-						features = region.data as GeoJSONFeature[];
-					} else if (isGeoJSONFeature(region.data)) {
-						features = [region.data];
-					} else {
-						console.error(`Data structure not recognized for region: ${region.key}`, region.data);
-						return;
-					}
-
-					const mappedFeatures = features.map((f) => ({
-						...f,
-						properties: {
-							...(f.properties || {}),
-							__group: region.key,
-							__label: region.label,
-						} as PropertiesRecord,
-					}));
-					allFeatures.push(...mappedFeatures);
+				setInteractiveData({ 
+					type: "FeatureCollection", 
+					features: filteredFeatures
 				});
-
-				setInteractiveData({ type: "FeatureCollection", features: allFeatures as unknown as GeoJSONFeature[] });
 			} catch (error) {
-				console.error("Error loading map data:", error);
+				console.error("Error loading world map data:", error);
 			} finally {
 				setLoading(false);
 			}
 		};
 
 		loadGeoData();
-	}, [t.mapUnitedStates, t.mapEurope, t.mapAsia]);
+	}, []);
 
-	const selectedGroup = useMemo(() => selectedCountry as GroupKey | undefined, [selectedCountry]);
+	const selectedCountryName = useMemo(() => selectedCountry, [selectedCountry]);
 
 	const handleFeatureClick = (feature: GeoJSONFeature) => {
-		const group = getCustomProp<GroupKey>(feature, "__group");
-		if (!group) return;
-		if (onCountrySelect) {
-			onCountrySelect(group);
+		const geoJsonCountryName = getNameFromFeature(feature);
+		const salaryCountryName = geoJSONCountryToSalary(geoJsonCountryName);
+		
+		if (salaryCountryName && onCountrySelect) {
+			onCountrySelect(salaryCountryName);
 		}
 	};
 
 	const onEachInteractiveFeature = (feature: GeoJSONFeature, layer: Layer) => {
-		const group = getCustomProp<GroupKey>(feature, "__group");
-		const labelByGroup: Record<GroupKey, string> = {
-			"United States": t.mapUnitedStates,
-			Europe: t.mapEurope,
-			Asia: t.mapAsia,
-		};
+		const geoJsonCountryName = getNameFromFeature(feature);
+		const salaryCountryName = geoJSONCountryToSalary(geoJsonCountryName);
 		
-		const label = group ? labelByGroup[group] : getNameFromFeature(feature);
+		let label = salaryCountryName || geoJsonCountryName;
+		
+		if (salaryCountryName) {
+			const translationKey = getCountryTranslationKey(salaryCountryName);
+			if (translationKey && t[translationKey as keyof typeof t]) {
+				label = t[translationKey as keyof typeof t] as string;
+			}
+		}
 		
 		const tooltipOptions = {
 			className: "country-tooltip",
@@ -140,7 +102,7 @@ export function InteractiveMap({
 			click: () => handleFeatureClick(feature),
 			mouseover: (e) => {
 				const target = e.target as Layer & { setStyle: (style: PathOptions) => void };
-				const isSelected = Boolean(selectedGroup && getCustomProp<GroupKey>(feature, "__group") === selectedGroup);
+				const isSelected = Boolean(selectedCountryName && salaryCountryName === selectedCountryName);
 				target.setStyle({
 					weight: 2,
 					color: isSelected ? "#16a34a" : "#374151",
@@ -165,7 +127,11 @@ export function InteractiveMap({
 				fillColor: "#86efac",
 			};
 		}
-		const isSelected = Boolean(selectedGroup && getCustomProp<GroupKey>(feature, "__group") === selectedGroup);
+		
+		const geoJsonCountryName = getNameFromFeature(feature);
+		const salaryCountryName = geoJSONCountryToSalary(geoJsonCountryName);
+		const isSelected = Boolean(selectedCountryName && salaryCountryName === selectedCountryName);
+		
 		return {
 			weight: isSelected ? 3 : 1,
 			opacity: 1,
@@ -200,7 +166,7 @@ export function InteractiveMap({
 
 				{interactiveData && (
 					<GeoJSON
-						key={`interactive-${selectedGroup || "none"}`}
+						key={`interactive-${selectedCountryName || "none"}`}
 						data={interactiveData}
 						style={getInteractiveStyle}
 						onEachFeature={onEachInteractiveFeature}

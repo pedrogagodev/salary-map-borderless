@@ -8,6 +8,7 @@ import { YAxis } from "recharts";
 import { Tooltip } from "recharts";
 import { AnimatedContainer } from "../ui/animated-container";
 import { useI18n } from "../../contexts/I18n";
+import { getCountryTranslationKey } from "../../utils/countryMapping";
 
 interface RegionData {
 	country: string;
@@ -60,6 +61,19 @@ export function RegionalComparison({
 	regionChartData,
 }: RegionalComparisonProps) {
 	const { t } = useI18n();
+	
+	const getTranslatedCountryName = (countryName: string): string => {
+		const translationKey = getCountryTranslationKey(countryName);
+		if (translationKey && t[translationKey as keyof typeof t]) {
+			return t[translationKey as keyof typeof t] as string;
+		}
+		return countryName;
+	};
+	
+	const translatedRegionData = regionChartData.map(item => ({
+		...item,
+		country: getTranslatedCountryName(item.country)
+	}));
 	return (
 		<AnimatedContainer delay={0.8}>
 			<Card>
@@ -75,7 +89,7 @@ export function RegionalComparison({
 					<AnimatedContainer delay={1.0}>
 						<div className="h-48 sm:h-64">
 							<ResponsiveContainer width="100%" height="100%">
-								<LineChart data={regionChartData}>
+								<LineChart data={translatedRegionData}>
 									<CartesianGrid
 										strokeDasharray="3 3"
 										stroke="rgba(255,255,255,0.15)"
