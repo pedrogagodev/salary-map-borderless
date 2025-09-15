@@ -40,6 +40,17 @@ export interface Translations {
   asia: string
   unitedStates: string
   
+  canada: string
+  dubai: string
+  london: string
+  germany: string
+  singapore: string
+  china: string
+  australia: string
+  sweden: string
+  netherlands: string
+  switzerland: string
+  
   close: string
   openFilters: string
   

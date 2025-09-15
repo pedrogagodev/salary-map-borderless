@@ -14,10 +14,10 @@ export function InternationalImpact({
 	return (
 		<>
 			{hasInternational && (
-				<AnimatedContainer delay={0.6}>
+				<AnimatedContainer delay={0} duration={0.3}>
 					<Card className="border-secondary/30 bg-secondary/5">
 						<CardHeader>
-							<AnimatedContainer delay={0.7}>
+							<AnimatedContainer delay={0.02} duration={0.3}>
 								<CardTitle className="flex items-center gap-2 text-foreground">
 									<MapPin className="w-5 h-5 text-secondary" />
 									{t.internationalExperienceImpact}
@@ -25,20 +25,21 @@ export function InternationalImpact({
 							</AnimatedContainer>
 						</CardHeader>
 						<CardContent>
-							<AnimatedContainer delay={0.8}>
-								<div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-									<AnimatedContainer delay={0.9}>
-										<div className="text-center p-4 rounded-lg bg-card border border-border">
+							<AnimatedContainer delay={0.03} duration={0.3}>
+								<div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-stretch">
+									<AnimatedContainer delay={0.04} duration={0.3}>
+										<div className="text-center p-4 rounded-lg bg-card border border-border h-full flex flex-col justify-center">
 											<p className="text-sm text-muted-foreground">
 												{t.withoutInternationalExperience}
 											</p>
 											<p className="text-lg sm:text-xl font-bold text-foreground">
 												$ {Math.round(calculatedSalary.avg / 1.2).toLocaleString()}
 											</p>
+											<span className="invisible select-none">{t.increasePercentage}</span>
 										</div>
 									</AnimatedContainer>
-									<AnimatedContainer delay={1.0}>
-										<div className="text-center p-4 rounded-lg bg-secondary/10 border border-secondary/20">
+									<AnimatedContainer delay={0.05} duration={0.3}>
+										<div className="text-center p-4 rounded-lg bg-secondary/10 border border-secondary/20 h-full flex flex-col justify-center">
 											<p className="text-sm text-muted-foreground">
 												{t.withInternationalExperience}
 											</p>

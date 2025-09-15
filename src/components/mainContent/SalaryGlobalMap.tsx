@@ -15,10 +15,10 @@ export function SalaryGlobalMap({
 }) {
 	const { t } = useI18n();
 	return (
-		<AnimatedContainer delay={0.4}>
+		<AnimatedContainer delay={0.05}>
 			<Card>
 				<CardHeader>
-					<AnimatedContainer delay={0.5}>
+					<AnimatedContainer delay={0.05}>
 						<CardTitle className="flex items-center gap-2">
 							<MapPin className="w-5 h-5" />
 							{t.globalSalaryMap}
@@ -26,7 +26,7 @@ export function SalaryGlobalMap({
 					</AnimatedContainer>
 				</CardHeader>
 				<CardContent>
-					<AnimatedContainer delay={0.6}>
+					<AnimatedContainer delay={0.05}>
 						<InteractiveMap
 							selectedCountry={selectedCountry}
 							onCountrySelect={setSelectedCountry}

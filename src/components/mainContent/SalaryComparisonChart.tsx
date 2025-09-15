@@ -14,6 +14,7 @@ import { Card } from "../ui/card";
 import { AnimatedContainer } from "../ui/animated-container";
 import { simplifyStackName } from "../../utils/salaryDataUtils";
 import { useI18n } from "../../contexts/I18n";
+import { getCountryTranslationKey } from "../../utils/countryMapping";
 
 interface SalaryComparisonDatum {
 	area: string;
@@ -76,6 +77,14 @@ export function SalaryComparisonChart({
 }: SalaryComparisonChartProps) {
 	const { t } = useI18n();
 	const [showInternationalComparison, setShowInternationalComparison] = useState(false);
+	
+	const getTranslatedCountryName = (countryName: string): string => {
+		const translationKey = getCountryTranslationKey(countryName);
+		if (translationKey && t[translationKey as keyof typeof t]) {
+			return t[translationKey as keyof typeof t] as string;
+		}
+		return countryName;
+	};
 
 	const shouldShowInternationalButton = !hasInternational;
 	const showComparison = hasInternational || showInternationalComparison;
@@ -160,7 +169,7 @@ export function SalaryComparisonChart({
 										tickLine={{ stroke: "#ffffff" }}
 									/>
 									<Tooltip content={<CustomTooltip />} />
-									<Bar dataKey="salario_base" fill="#60a5fa" name={selectedCountry} />
+									<Bar dataKey="salario_base" fill="#60a5fa" name={getTranslatedCountryName(selectedCountry)} />
 									{showComparison && (
 										<Bar
 											dataKey="salario_internacional"
