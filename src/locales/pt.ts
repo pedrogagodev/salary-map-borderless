@@ -39,6 +39,17 @@ export const pt: Translations = {
   europe: 'Europa',
   asia: 'Ásia',
   unitedStates: 'Estados Unidos',
+
+  canada: 'Canadá',
+  dubai: 'Dubai',
+  london: 'Reino Unido',
+  germany: 'Alemanha',
+  singapore: 'Singapura',
+  china: 'China',
+  australia: 'Austrália',
+  sweden: 'Suécia',
+  netherlands: 'Holanda',
+  switzerland: 'Suíça',
   
   close: 'Fechar',
   openFilters: 'Filtros',

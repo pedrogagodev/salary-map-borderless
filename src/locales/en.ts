@@ -40,6 +40,17 @@ export const en: Translations = {
   asia: 'Asia',
   unitedStates: 'United States',
   
+  canada: 'Canada',
+  dubai: 'Dubai',
+  london: 'United Kingdom',
+  germany: 'Germany',
+  singapore: 'Singapore',
+  china: 'China',
+  australia: 'Australia',
+  sweden: 'Sweden',
+  netherlands: 'Netherlands',
+  switzerland: 'Switzerland',
+  
   close: 'Close',
   openFilters: 'Filters',
   
