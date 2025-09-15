@@ -85,5 +85,7 @@ export const pt: Translations = {
   mapUnitedStates: 'Estados Unidos',
   mapEurope: 'Europa',
   mapAsia: 'Ásia',
+  
+  interactWithChartForDetails: 'Passe o dedo sobre o gráfico para ver informações detalhadas',
 }
 

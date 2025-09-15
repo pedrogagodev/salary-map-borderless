@@ -110,17 +110,17 @@ export function SalaryComparisonChart({
 			<Card>
 				<CardHeader>
 					<AnimatedContainer delay={0.6}>
-						<div className="flex items-center justify-between">
+						<div className="flex flex-col lg:flex-row gap-4 lg:gap-0 items-center justify-between">
 							<CardTitle className="flex items-center gap-2">
 								<BarChart className="w-5 h-5" />
 								{t.salaryComparisonWithInternational}
 							</CardTitle>
-							<div className="flex gap-2">
+							<div className="flex gap-2 w-full md:w-auto">
 								<Button
 									size="sm"
 									variant="outline"
 									onClick={onToggleComparisonType}
-									className="text-sm transition-colors border border-primary/50 hover:border-primary"
+									className="text-sm transition-colors border border-primary/50 hover:border-primary "
 								>
 									{comparisonType === 'stacks' ? t.viewAreas : t.viewStacks}
 								</Button>
@@ -141,8 +141,13 @@ export function SalaryComparisonChart({
 						</div>
 					</AnimatedContainer>
 				</CardHeader>
-				<CardContent>
+				<CardContent className="!pb-2 sm:!pb-6">
 					<AnimatedContainer delay={0.7}>
+						<div className="mb-3">
+							<p className="text-sm text-muted-foreground text-center">
+								{t.interactWithChartForDetails}
+							</p>
+						</div>
 						<div className="h-64 sm:h-80">
 							<ResponsiveContainer width="100%" height="100%">
 								<BarChart data={processedChartData}>
@@ -157,7 +162,7 @@ export function SalaryComparisonChart({
 										angle={-45}
 										textAnchor="end"
 										height={80}
-										tick={{ fill: "#ffffff", fontSize: 13 }}
+										tick={{ fill: "#ffffff", fontSize: 13, className: "hidden sm:block" }}
 										axisLine={{ stroke: "#ffffff" }}
 										tickLine={{ stroke: "#ffffff" }}
 									/>
