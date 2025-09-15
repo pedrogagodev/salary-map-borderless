@@ -85,5 +85,7 @@ export interface Translations {
   mapUnitedStates: string
   mapEurope: string
   mapAsia: string
+  
+  interactWithChartForDetails: string
 }
 

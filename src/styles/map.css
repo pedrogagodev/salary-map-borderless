@@ -35,3 +35,15 @@
 	border: none;
 	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
+
+.map-wrapper-simple .leaflet-control-zoom {
+	z-index: 400;
+}
+
+.map-wrapper-simple .leaflet-control-attribution {
+	z-index: 400;
+}
+
+.map-wrapper-simple .leaflet-container {
+	z-index: 1;
+}

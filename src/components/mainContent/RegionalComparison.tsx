@@ -131,6 +131,11 @@ export function RegionalComparison({
 				</CardHeader>
 				<CardContent>
 					<AnimatedContainer delay={1.0}>
+						<div className="mb-3">
+							<p className="text-sm text-muted-foreground text-center">
+								{t.interactWithChartForDetails}
+							</p>
+						</div>
 						<div className="h-48 sm:h-64">
 							<ResponsiveContainer width="100%" height="100%">
 								<LineChart data={translatedRegionData}>
