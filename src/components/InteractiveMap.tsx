@@ -1,12 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
 import { MapContainer, TileLayer, GeoJSON } from "react-leaflet";
 import type { GeoJSONData, GeoJSONFeature } from "@/types/mapTypes";
-import type { Layer, PathOptions } from "leaflet";
+import type { Layer, PathOptions, Path, LeafletMouseEvent } from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "../styles/map.css";
 import { useI18n } from "../contexts/I18n";
 import { 
-  hasCountrySalaryData, 
   geoJSONCountryToSalary,
   getCountryTranslationKey
 } from "../utils/countryMapping";
@@ -46,15 +45,7 @@ export function InteractiveMap({
 				const response = await fetch(assetUrl);
 				const worldData = await response.json() as GeoJSONData;
 
-				const filteredFeatures = worldData.features.filter((feature) => {
-					const countryName = getNameFromFeature(feature);
-					return hasCountrySalaryData(countryName);
-				});
-
-				setInteractiveData({ 
-					type: "FeatureCollection", 
-					features: filteredFeatures
-				});
+				setInteractiveData(worldData);
 			} catch (error) {
 				console.error("Error loading world map data:", error);
 			} finally {
@@ -88,33 +79,42 @@ export function InteractiveMap({
 				label = t[translationKey as keyof typeof t] as string;
 			}
 		}
-		
-		const tooltipOptions = {
-			className: "country-tooltip",
-			sticky: true,
-			direction: 'center' as const,
-			offset: [0, -10] as [number, number]
-		};
-			
-		layer.bindTooltip(String(label), tooltipOptions);
 
-		layer.on({
-			click: () => handleFeatureClick(feature),
-			mouseover: (e) => {
-				const target = e.target as Layer & { setStyle: (style: PathOptions) => void };
+		const isAvailable = Boolean(salaryCountryName);
+
+		if (isAvailable) {
+			const tooltipOptions = {
+				className: "country-tooltip",
+				sticky: true,
+				direction: 'center' as const,
+				offset: [0, -10] as [number, number]
+			};
+			layer.bindTooltip(String(label), tooltipOptions);
+		}
+
+		const el = (layer as unknown as { getElement?: () => HTMLElement | null }).getElement?.();
+		if (el) el.style.cursor = isAvailable ? "pointer" : "not-allowed";
+
+		const handlers: Record<string, (e: LeafletMouseEvent) => void> = {};
+		if (isAvailable) {
+			handlers.click = () => handleFeatureClick(feature);
+			handlers.mouseover = (e: LeafletMouseEvent) => {
+				const target = e.target as Path;
 				const isSelected = Boolean(selectedCountryName && salaryCountryName === selectedCountryName);
 				target.setStyle({
-					weight: 2,
-					color: isSelected ? "#16a34a" : "#374151",
-					fillOpacity: 0.85,
-					fillColor: isSelected ? "#22c55e" : "#a7f3d0",
+					weight: isSelected ? 5 : 4,
+					color: "#111827",
+					fillOpacity: isSelected ? 0.95 : 0.45,
+					fillColor: "#22c55e",
 				});
-			},
-			mouseout: (e) => {
-				const target = e.target as Layer & { setStyle: (style: PathOptions) => void };
+			};
+			handlers.mouseout = (e: LeafletMouseEvent) => {
+				const target = e.target as Path;
 				target.setStyle(getInteractiveStyle(feature));
-			},
-		});
+			};
+		}
+
+		layer.on(handlers as Record<string, (e: LeafletMouseEvent) => void>);
 	};
 
 	const getInteractiveStyle = (feature?: GeoJSONFeature): PathOptions => {
@@ -130,14 +130,25 @@ export function InteractiveMap({
 		
 		const geoJsonCountryName = getNameFromFeature(feature);
 		const salaryCountryName = geoJSONCountryToSalary(geoJsonCountryName);
+		const isAvailable = Boolean(salaryCountryName);
 		const isSelected = Boolean(selectedCountryName && salaryCountryName === selectedCountryName);
 		
+		if (!isAvailable) {
+			return {
+				weight: 0.7,
+				opacity: 1,
+				color: "#9ca3af",
+				fillOpacity: 0,
+				fillColor: "transparent",
+			};
+		}
+
 		return {
-			weight: isSelected ? 3 : 1,
+			weight: isSelected ? 2 : 1,
 			opacity: 1,
-			color: isSelected ? "#15803d" : "#166534",
-			fillOpacity: isSelected ? 0.9 : 0.7,
-			fillColor: isSelected ? "#22c55e" : "#86efac",
+			color: "#111827",
+			fillOpacity: isSelected ? 0.95 : 0.2,
+			fillColor: "#22c55e",
 		};
 	};
 
